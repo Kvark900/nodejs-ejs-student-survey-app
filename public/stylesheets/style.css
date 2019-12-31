@@ -1,0 +1,24 @@
+body {
+  /*padding: 50px;*/
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+.navbarLink{
+  margin-left: 10px;
+
+}
+
+#navbarLinksPanel{
+  display: flex;
+  justify-content: flex-start;
+
+}
+
+#content{
+  padding: 30px;
+
+}
+
+a {
+  color: #00B7FF;
+}
