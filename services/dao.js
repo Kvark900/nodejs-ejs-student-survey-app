@@ -10,6 +10,17 @@ async function getSubjects() {
     }
 }
 
+async function getQuestions() {
+    try {
+        let queryResult = await dbConfig.pool.query("SELECT * from survey_copy.question;");
+        console.info(new Date() + ": Getting question success");
+        return queryResult;
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+
 async function postSurvey(year, subject_id) {
     try {
         await dbConfig.pool.query(
@@ -35,7 +46,7 @@ async function getSurveys() {
 async function getSurveysWithSubjectNames() {
     try {
         let queryResult = await dbConfig.pool.query(
-            "SELECT sr.year, su.name subject_name " +
+            "SELECT sr.id, sr.year, su.name subject_name " +
             "FROM survey_copy.survey sr " +
             "JOIN survey_copy.subject su " +
             "ON sr.subject_id = su.id;");
@@ -60,6 +71,7 @@ module.exports = {
     getSubjects,
     postSurvey,
     getSurveys,
+    getQuestions,
     getSurveysWithSubjectNames,
     deleteSurvey
 };

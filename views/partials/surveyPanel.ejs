@@ -1,0 +1,49 @@
+<div id="surveyPanel">
+	<form id="addSurveyForm"
+	      class="form-inline">
+		<select id="yearBox">
+			<option value="2019">2019</option>
+			<option value="2018">2018</option>
+			<option value="2017">2017</option>
+			<option value="2016">2016</option>
+			<option value="2015">2015</option>
+		</select>
+
+		<select id="subjectBox">
+			<% for (let i = 0; i < subjects.length; i++){ %>
+				<option value="<%= subjects[i].id %>"><%= subjects[i].name %></option>
+			<% } %>
+		</select>
+
+		<button id="addSurveyBtn"
+		        type="button"
+		        onclick="addSurvey()"
+		        class="btn btn-sm btn-primary mb-2">Add
+		</button>
+	</form>
+
+	<table id="surveyTable"
+	       class="table">
+		<thead>
+			<tr>
+				<th>Year</th>
+				<th>Subject ID</th>
+			</tr>
+		</thead>
+		<% for (let i = 0; i < surveys.length; i++) { %>
+			<tr>
+				<td>
+					<%= surveys[i].year %>
+				</td>
+				<td>
+					<%= surveys[i].subject_name %>
+				</td>
+				<td>
+					<img onclick="deleteSurvey(<%= surveys[i].id %>, this.parentElement.parentElement.rowIndex)"
+					     style="height: 30px"
+					     src="https://img.icons8.com/carbon-copy/100/000000/delete-forever--v1.png">
+				</td>
+			</tr>
+		<% } %>
+	</table>
+</div>

@@ -15,14 +15,11 @@
 			<%- include partials/sidebar.ejs %>
 			<!-- End vertical navbar -->
 			<div id="profContent">
-
-
+					<h1>Questions working</h1>
 			</div>
-
 		</div>
 
-
-		<script>
+		<!--<script>
         function addSurvey() {
             let year = $("#yearBox")[0].value;
             if (isNaN(year)) {
@@ -67,8 +64,13 @@
             });
         }
 
+        function loadContent(link) {
+            if (link === "Surveys")
+                $("#profContent").load("partials/surveyPanel.ejs");
+        }
+
         //# sourceURL=addSurvey.js
-		</script>
+		</script>-->
 		<% include partials/scripts.ejs %>
 	</body>
 </html>
