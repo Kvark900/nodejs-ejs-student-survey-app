@@ -13,10 +13,14 @@ body {
 }
 
 #surveyPanel {
-    padding-left: 100px;
     display: flex;
     flex-direction: column;
 
+}
+
+#profContent{
+    width: 50%;
+    padding-left: 100px;
 }
 
 #navbarLinksPanel {

@@ -15,62 +15,121 @@
 			<%- include partials/sidebar.ejs %>
 			<!-- End vertical navbar -->
 			<div id="profContent">
-					<h1>Questions working</h1>
+				<h1>Questions working</h1>
+				<form>
+					<div class="form-group row">
+						<label for="surveyBox"
+						       class="col-sm-2 col-form-label">Survey
+						</label>
+						<div class="col-sm-10 d-flex">
+							<select class="custom-select"
+							        id="subjectBox">
+								<% for (let i = 0; i < surveys.length; i++){ %>
+									<option value="<%= surveys[i].id %>">
+										<%= surveys[i].year %> <%= surveys[i].subject_name %>
+									</option>
+								<% } %>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label"
+						       for="questionText">Question
+						</label>
+						<div class="col-sm-10 d-flex">
+							<textarea class="form-control rounded-0"
+							          id="questionText"
+							          rows="5"></textarea>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="multipleChoiceBox"
+						       class="col-sm-2 col-form-label">Is Multiple Choice Question
+						</label>
+						<div class="col-sm-10 d-flex">
+							<input id="multipleChoiceBox"
+							       class="form-check-input"
+							       onchange="renderMultipleChoices()"
+							       type="checkbox">
+						</div>
+					</div>
+
+					<div id="multipleChoicesPanel">
+						<div class="form-group row">
+							<label for="multipleChoiceBox"
+							       class="col-sm-2 col-form-label">Option 1
+							</label>
+							<div class="col-sm-10 d-flex">
+							<textarea class="form-control rounded-0"
+							          disabled
+							          id="option1"
+							          rows="2"></textarea>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="multipleChoiceBox"
+							       class="col-sm-2 col-form-label">Option 2
+							</label>
+							<div class="col-sm-10 d-flex">
+							<textarea class="form-control rounded-0"
+							          disabled
+							          id="option2"
+							          rows="2"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="form-group row d-flex flex-row-reverse">
+						<button type="button"
+						        disabled
+						        id="addOptionBtn"
+						        onclick="renderNewOptionBox()"
+						        class="btn btn-primary">New Option
+						</button>
+					</div>
+
+				</form>
 			</div>
 		</div>
 
-		<!--<script>
-        function addSurvey() {
-            let year = $("#yearBox")[0].value;
-            if (isNaN(year)) {
-                console.error("Year is not a number")
-                return
-            }
-            year = parseInt(year);
-            let subject_id = $("#subjectBox")[0].value;
-            let survey = {
-                year: year,
-                subject_id: subject_id
-            };
-            $.ajax({
-                url: "/survey",
-                type: 'POST',
-                data: survey,
-                error: (xhr, error) => {
-                    // console.debug(xhr);
-                    console.error("Error in ajax req: " + error);
-                },
-                success: () => {
-                    console.log("Post success");
-                    $("#surveyTable").load(" #surveyTable", () => {
-                        $("#surveyTable").children().unwrap();
-                    });
-                }
-            });
+
+		<script>
+        function renderMultipleChoices() {
+            $("#option1")[0].disabled = !$("#multipleChoiceBox")[0].checked;
+            $("#option2")[0].disabled = !$("#multipleChoiceBox")[0].checked;
+            $("#addOptionBtn")[0].disabled = !$("#multipleChoiceBox")[0].checked;
         }
 
-        function deleteSurvey(id, index) {
-            $.ajax({
-                url: "/survey/" + id,
-                type: 'DELETE',
-                error: (xhr, error) => {
-                    // console.debug(xhr);
-                    console.error("Error in ajax req: " + error);
-                },
-                success: () => {
-                    console.info("Delete success");
-                    $("#surveyTable")[0].deleteRow(index);
-                }
-            });
+        function renderNewOptionBox() {
+            let panel = $("#multipleChoicesPanel")[0];
+            let x = panel.children.length + 1;
+            let newOption = `<div id="optionRow${x}"
+																	class="form-group row">
+																<label for="multipleChoiceBox"
+																       class="col-sm-2 col-form-label">Option ${x}
+																</label>
+																<div class="col-sm-9 d-flex">
+																	<textarea class="form-control rounded-0"
+																	          id="option${x}"
+																	          rows="2"></textarea>
+																</div>
+																<div class="col-sm-1 d-flex align-items-center">
+																	<img  onclick="removeOption(${x})"
+									                      style="height: 30px"
+									                      src="https://img.icons8.com/carbon-copy/100/000000/delete-forever--v1.png"/>
+																</div>
+														</div>`
+		        panel.insertAdjacentHTML("beforeend", newOption);
         }
 
-        function loadContent(link) {
-            if (link === "Surveys")
-                $("#profContent").load("partials/surveyPanel.ejs");
+        function removeOption(id) {
+            $("#optionRow"+id)[0].remove()
         }
 
-        //# sourceURL=addSurvey.js
-		</script>-->
+
+		</script>
 		<% include partials/scripts.ejs %>
 	</body>
 </html>

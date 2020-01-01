@@ -19,9 +19,9 @@ router.get('/survey', async (req, res, next) => {
 
 router.get('/question', async (req, res, next) => {
     let questions = await dao.getQuestions();
-    res.render('question', {title: 'Express', questions: questions.rows});
+    let surveys = await dao.getSurveysWithSubjectNames();
+    res.render('question', {title: 'Express', questions: questions.rows, surveys: surveys.rows});
 });
-
 
 
 router.post("/survey", (async (req, res) => {
