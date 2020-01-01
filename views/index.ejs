@@ -1,60 +1,118 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <% include partials/head.ejs %>
-</head>
-<body>
+	<head>
+		<% include partials/head.ejs %>
+	</head>
+	<body>
 
-<header>
-    <% include partials/header.ejs%>
-</header>
-
-<div id="content">
-    <form id="addSurveyForm"
-          class="form-inline">
-        <label class="sr-only"
-               for="inlineFormInputName2">Name</label>
-        <input type="text"
-               class="form-control mb-2 mr-sm-2"
-               id="inlineFormInputName2"
-               placeholder="Jane Doe">
-
-        <label class="sr-only"
-               for="inlineFormInputGroupUsername2">Username</label>
-        <div class="input-group mb-2 mr-sm-2">
-            <div class="input-group-prepend">
-                <div class="input-group-text">@</div>
-            </div>
-            <input type="text"
-                   class="form-control"
-                   id="inlineFormInputGroupUsername2"
-                   placeholder="Username">
-        </div>
-
-        <div class="form-check mb-2 mr-sm-2">
-            <input class="form-check-input"
-                   type="checkbox"
-                   id="inlineFormCheck">
-            <label class="form-check-label"
-                   for="inlineFormCheck">
-                Remember me
-            </label>
-        </div>
-
-        <button type="submit"
-                class="btn btn-primary mb-2">Submit
-        </button>
-    </form>
+		<header>
+			<% include partials/header.ejs %>
+		</header>
 
 
-</div>
+		<div id="content">
+			<!-- Vertical navbar -->
+			<% include partials/sidebar.ejs %>
+			<!-- End vertical navbar -->
+			<div id="surveyPanel">
+				<form id="addSurveyForm"
+				      class="form-inline">
+					<select id="yearBox">
+						<option value="2019">2019</option>
+						<option value="2018">2018</option>
+						<option value="2017">2017</option>
+						<option value="2016">2016</option>
+						<option value="2015">2015</option>
+					</select>
+
+					<select id="subjectBox">
+						<% for (let i = 0; i < subjects.length; i++){ %>
+							<option value="<%= subjects[i].id %>"><%= subjects[i].name %></option>
+						<% } %>
+					</select>
+
+					<button id="addSurveyBtn"
+					        type="button"
+					        onclick="addSurvey()"
+					        class="btn btn-sm btn-primary mb-2">Add
+					</button>
+				</form>
+
+				<table id="surveyTable"
+				       class="table">
+					<thead>
+						<tr>
+							<th>Year</th>
+							<th>Subject ID</th>
+						</tr>
+					</thead>
+					<% for (let i = 0; i < surveys.length; i++) { %>
+						<tr>
+							<td>
+								<%= surveys[i].year %>
+							</td>
+							<td>
+								<%= surveys[i].subject_name %>
+							</td>
+							<td>
+								<img onclick="deleteSurvey(<%= surveys[i].id %>, this.parentElement.parentElement.rowIndex)"
+								     style="height: 30px"
+								     src="https://img.icons8.com/carbon-copy/100/000000/delete-forever--v1.png">
+							</td>
+						</tr>
+					<% } %>
+				</table>
+			</div>
+		</div>
 
 
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-</body>
+		<script>
+        function addSurvey() {
+            let year = $("#yearBox")[0].value;
+            if (isNaN(year)) {
+                console.error("Year is not a number")
+                return
+            }
+            year = parseInt(year);
+            let subject_id = $("#subjectBox")[0].value;
+            let survey = {
+                year: year,
+                subject_id: subject_id
+            };
+            $.ajax({
+                url: "/survey",
+                type: 'POST',
+                data: survey,
+                error: (xhr, error) => {
+                    // console.debug(xhr);
+                    console.error("Error in ajax req: " + error);
+                },
+                success: () => {
+                    console.log("Post success");
+                    $("#surveyTable").load(" #surveyTable", () => {
+                        $("#surveyTable").children().unwrap();
+                    });
+                }
+            });
+        }
+
+        function deleteSurvey(id, index) {
+            $.ajax({
+                url: "/survey/" + id,
+                type: 'DELETE',
+                error: (xhr, error) => {
+                    // console.debug(xhr);
+                    console.error("Error in ajax req: " + error);
+                },
+                success: () => {
+                    console.log("Delete success");
+                    $("#surveyTable")[0].deleteRow(index)
+                }
+            });
+        }
+
+        //# sourceURL=addSurvey.js
+		</script>
+		<% include partials/scripts.ejs %>
+	</body>
 </html>

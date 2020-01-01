@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var bodyParser = require('body-parser');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -14,9 +14,11 @@ server.set('views', path.join(__dirname, 'views'));
 server.set('view engine', 'ejs');
 
 server.use(logger('dev'));
-server.use(express.json());
-server.use(express.urlencoded({extended: false}));
+// server.use(express.json());
+// server.use(express.urlencoded({extended: false}));
 server.use(cookieParser());
+server.use(bodyParser.json());
+server.use(bodyParser.urlencoded({ extended: false }));
 server.use(express.static(path.join(__dirname, 'public')));
 
 server.use('/', indexRouter);
