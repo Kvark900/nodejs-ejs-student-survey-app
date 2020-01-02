@@ -20,7 +20,16 @@ router.get('/survey', async (req, res, next) => {
 router.get('/question', async (req, res, next) => {
     let questions = await dao.getQuestions();
     let surveys = await dao.getSurveysWithSubjectNames();
-    res.render('question', {title: 'Express', questions: questions.rows, surveys: surveys.rows});
+    let types = await dao.getQuestionTypes();
+    let categories = await dao.getQuestionCategories();
+    res.render('question',
+        {
+                    title: 'Question',
+                    questions: questions.rows,
+                    surveys: surveys.rows,
+                    types: types.rows,
+                    categories: categories.rows
+                });
 });
 
 
@@ -42,5 +51,18 @@ router.delete("/survey/:id", (async (req, res) => {
         res.status(400).send(e.message)
     }
 }));
+
+router.post("/question", async (req, res) => {
+    let question = req.body;
+    try {
+       await dao.postQuestion(question);
+       console.info("Question has been saved: ");
+       console.info(question);
+       res.sendStatus(200);
+    } catch (e) {
+        console.error(e);
+        res.status(400).send(e.message)
+    }
+});
 
 module.exports = router;

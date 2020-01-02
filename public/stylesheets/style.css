@@ -23,6 +23,10 @@ body {
     padding-left: 100px;
 }
 
+#alertsPanel{
+    padding-left: 20px;
+}
+
 #navbarLinksPanel {
     display: flex;
     justify-content: flex-start;
