@@ -6,6 +6,7 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const moment = require("moment");
 
 const server = express();
 
@@ -14,8 +15,8 @@ server.set('views', path.join(__dirname, 'views'));
 server.set('view engine', 'ejs');
 
 server.use(logger('dev'));
-// server.use(express.json());
-// server.use(express.urlencoded({extended: false}));
+server.use(express.json());
+server.use(express.urlencoded({extended: false}));
 server.use(cookieParser());
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true}));

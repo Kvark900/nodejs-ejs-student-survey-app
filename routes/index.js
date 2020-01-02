@@ -1,41 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const dao = require('../services/dao');
+const moment = require("moment");
+
 
 /* GET home page. */
 router.get('/', async (req, res, next) => {
     let subjects = await dao.getSubjects();
     let surveys = await dao.getSurveysWithSubjectNames();
-    // console.info(subjects.rows);
-    // console.info(surveys.rows);
     res.render('index', {title: 'Express', subjects: subjects.rows, surveys: surveys.rows});
 });
 
-router.get('/survey', async (req, res, next) => {
+router.get('/lecture', async (req, res, next) => {
     let subjects = await dao.getSubjects();
-    let surveys = await dao.getSurveysWithSubjectNames();
-    res.render('survey', {title: 'Express', subjects: subjects.rows, surveys: surveys.rows});
+    let lectures = await dao.getLecturesWithSubjectNames();
+    res.render('lecture', {moment: moment, title: 'Express', subjects: subjects.rows, lectures: lectures.rows});
 });
 
-router.get('/question', async (req, res, next) => {
-    let questions = await dao.getQuestions();
-    let surveys = await dao.getSurveysWithSubjectNames();
-    let types = await dao.getQuestionTypes();
-    let categories = await dao.getQuestionCategories();
-    res.render('question',
-        {
-            title: 'Question',
-            questions: questions.rows,
-            surveys: surveys.rows,
-            types: types.rows,
-            categories: categories.rows
-        });
-});
-
-
-router.post("/survey", (async (req, res) => {
+router.post("/lecture", (async (req, res) => {
     try {
-        await dao.postSurvey(parseInt(req.body.year), parseInt(req.body.subject_id));
+        await dao.postLecture(parseInt(req.body.time), parseInt(req.body.subject_id));
         res.sendStatus(200);
     } catch (e) {
         res.status(400).send(e.message)
@@ -52,6 +36,23 @@ router.delete("/survey/:id", (async (req, res) => {
     }
 }));
 
+
+router.get('/question', async (req, res, next) => {
+    let questions = await dao.getQuestions();
+    let lectures = await dao.getLecturesWithSubjectNames();
+    let types = await dao.getQuestionTypes();
+    let categories = await dao.getQuestionCategories();
+    res.render('question',
+        {
+            title: 'Question',
+            moment:  moment,
+            questions: questions.rows,
+            lectures: lectures.rows,
+            types: types.rows,
+            categories: categories.rows
+        });
+});
+
 router.post("/question", async (req, res) => {
     let question = req.body;
     try {
@@ -60,7 +61,7 @@ router.post("/question", async (req, res) => {
         console.info("Question has been saved: ");
         console.info(question);
 
-        if (question.options.length > 1)
+        if (question.options !== undefined && question.options.length > 1)
             await dao.postQuestionOptions(id, question.options);
         res.sendStatus(200);
     } catch (e) {

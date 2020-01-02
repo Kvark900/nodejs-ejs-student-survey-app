@@ -20,16 +20,16 @@
 				      style="display:none;">Please enter all required fields </span>
 				<form id="addQuestionForm">
 					<div class="form-group row">
-						<label for="surveyBox"
-						       class="col-sm-2 col-form-label">Survey
+						<label for="lectureBox"
+						       class="col-sm-2 col-form-label">Lecture
 						</label>
 						<div class="col-sm-10 d-flex">
 							<select required
 							        class="custom-select"
 							        id="subjectBox">
-								<% for (let i = 0; i < surveys.length; i++){ %>
-									<option value="<%= surveys[i].id %>">
-										<%= surveys[i].year %> <%= surveys[i].subject_name %>
+								<% for (let i = 0; i < lectures.length; i++){ %>
+									<option value="<%= lectures[i].id %>">
+										<%= moment(lectures[i].date_time).format('DD.MM.YYYY h:mm:ss') %> <%= lectures[i].subject_name %>
 									</option>
 								<% } %>
 							</select>
@@ -84,9 +84,12 @@
 					</div>
 
 					<div id="multipleChoicesPanel">
+						<label class="col-sm-2 col-form-label">
+							Multiple options:
+						</label>
 						<div class="form-group row">
 							<label for="multipleChoiceBox"
-							       class="col-sm-2 col-form-label">Option 1
+							       class="col-sm-2 col-form-label">
 							</label>
 							<div class="col-sm-10 d-flex">
 							<textarea class="form-control rounded-0"
@@ -99,7 +102,7 @@
 
 						<div class="form-group row">
 							<label for="multipleChoiceBox"
-							       class="col-sm-2 col-form-label">Option 2
+							       class="col-sm-2 col-form-label">
 							</label>
 							<div class="col-sm-10 d-flex">
 							<textarea class="form-control rounded-0"
@@ -151,9 +154,13 @@
 		<script>
         function renderMultipleChoices() {
             let isMultiple = $("#questionTypeBox")[0].value == 2 || $("#questionTypeBox")[0].value == 3;
-            $("#option1")[0].disabled = !isMultiple;
-            $("#option2")[0].disabled = !isMultiple;
+            let options = $("textarea[id*='option']");
             $("#addOptionBtn")[0].disabled = !isMultiple;
+            for (let i = 0; i < options.length; i++) {
+                options[i].disabled = !isMultiple;
+                if (!isMultiple)
+                    options[i].classList.remove("is-invalid");
+            }
         }
 
         function renderNewOptionBox() {
@@ -162,7 +169,7 @@
             let newOption = `<div id="optionRow${x}"
 																	class="form-group row">
 																<label for="multipleChoiceBox"
-																       class="col-sm-2 col-form-label">Option ${x}
+																       class="col-sm-2 col-form-label">
 																</label>
 																<div class="col-sm-9 d-flex">
 																	<textarea class="form-control rounded-0"
@@ -185,6 +192,9 @@
 
         function postQuestion() {
             let question = createQuestion();
+            if (question === false) return;
+            console.log("JSON question is ")
+            console.log(question)
             $.ajax({
                 url: "/question",
                 type: 'POST',
@@ -202,24 +212,25 @@
         }
 
         function createQuestion() {
+            let validForm = true;
+
             let question = {
-                survey_id: "",
+                lecture_id: "",
                 type_id: "",
                 category_id: "",
                 text: "",
-                options: [],
-            }
+                options: []
+            };
 
-            let validForm = true;
             let formFields = $("#addQuestionForm select, input, textarea");
 
             for (let i = 0; i < formFields.length; i++) {
-                if (formFields[i].disabled) continue;
                 validateField(formFields[i]);
+                if (formFields[i].disabled) continue;
                 if (formFields[i].id === "questionText")
                     question.text = formFields[i].value;
                 else if (formFields[i].id === "subjectBox")
-                    question.survey_id = parseInt(formFields[i].value);
+                    question.lecture_id = parseInt(formFields[i].value);
                 else if (formFields[i].id === "questionCategoryBox")
                     question.category_id = parseInt(formFields[i].value);
                 else if (formFields[i].id === "questionTypeBox")
@@ -227,14 +238,17 @@
                 else if (formFields[i].id.includes("option"))
                     question.options.push(formFields[i].value)
             }
-            !validForm ?
-                $("#invalidFormMsg")[0].style = "display:block; color: red" :
+            if (!validForm) {
+                $("#invalidFormMsg")[0].style = "display:block; color: red; padding-bottom:20px";
+                return false;
+            } else {
                 $("#invalidFormMsg")[0].style = "display:none;"
+            }
 
             console.log(question);
 
             function validateField(field) {
-                if (field.required && field.value === "") {
+                if (!field.disabled && field.required && field.value === "") {
                     field.classList.add("is-invalid");
                     validForm = false;
                 } else field.classList.remove("is-invalid");

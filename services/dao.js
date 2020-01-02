@@ -33,6 +33,19 @@ async function postSurvey(year, subject_id) {
     }
 }
 
+async function postLecture(timestamp, subject_id) {
+    try {
+        await dbConfig.pool.query(
+            "INSERT INTO survey_copy.lecture (date_time, subject_id) " +
+            "VALUES ($1, $2);", [timestamp, subject_id]
+        );
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
+}
+
+
 async function getSurveys() {
     try {
         let queryResult = await dbConfig.pool.query("SELECT * from survey_copy.survey;");
@@ -51,6 +64,20 @@ async function getSurveysWithSubjectNames() {
             "JOIN survey_copy.subject su " +
             "ON sr.subject_id = su.id;");
         console.info(new Date() + ": Getting surveys with subject names success");
+        return queryResult;
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+async function getLecturesWithSubjectNames() {
+    try {
+        let queryResult = await dbConfig.pool.query(
+                         "SELECT l.*, s.name subject_name " +
+                         "FROM survey_copy.lecture l " +
+                         "JOIN survey_copy.subject s " +
+                         "ON l.subject_id = s.id");
+        console.info(new Date() + ": Getting lectures with subject names success");
         return queryResult;
     } catch (e) {
         console.error(e);
@@ -92,8 +119,8 @@ async function getQuestionTypes() {
 async function postQuestion(question) {
     try {
         let result = await dbConfig.pool.query(
-            "INSERT INTO survey_copy.question (question, type_id, category_id, survey_id) " +
-            "VALUES ($1, $2, $3, $4) RETURNING id", [question.text, question.type_id, question.category_id, question.survey_id]
+            "INSERT INTO survey_copy.question (question, type_id, category_id, lecture_id) " +
+            "VALUES ($1, $2, $3, $4) RETURNING id", [question.text, question.type_id, question.category_id, question.lecture_id]
         );
         return result.rows[0].id;
     } catch (e) {
@@ -125,7 +152,9 @@ module.exports = {
     getQuestionCategories,
     getQuestionTypes,
     getSurveysWithSubjectNames,
+    getLecturesWithSubjectNames,
     deleteSurvey,
     postQuestion,
-    postQuestionOptions
+    postQuestionOptions,
+    postLecture
 };

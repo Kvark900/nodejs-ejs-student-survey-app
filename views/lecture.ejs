@@ -34,7 +34,6 @@
 
 						<button id="addSurveyBtn"
 						        type="button"
-						        onclick="addSurvey()"
 						        class="btn btn-sm btn-primary mb-2">Add
 						</button>
 					</form>
@@ -43,22 +42,13 @@
 					       class="table">
 						<thead>
 							<tr>
-								<th>Year</th>
-								<th>Subject ID</th>
+								<th>Time</th>
 							</tr>
 						</thead>
-						<% for (let i = 0; i < surveys.length; i++) { %>
+						<% for (let i = 0; i < lectures.length; i++) { %>
 							<tr>
 								<td>
-									<%= surveys[i].year %>
-								</td>
-								<td>
-									<%= surveys[i].subject_name %>
-								</td>
-								<td>
-									<img onclick="deleteSurvey(<%= surveys[i].id %>, this.parentElement.parentElement.rowIndex)"
-									     style="height: 30px"
-									     src="https://img.icons8.com/carbon-copy/100/000000/delete-forever--v1.png"/>
+									<%= moment(lectures[i].date_time).format('DD.MM.YYYY h:mm:ss') %>
 								</td>
 							</tr>
 						<% } %>
@@ -67,7 +57,7 @@
 			</div>
 		</div>
 
-		<script>
+		<!--<script>
         function addSurvey() {
             let year = $("#yearBox")[0].value;
             if (isNaN(year)) {
@@ -118,7 +108,7 @@
         }
 
         //# sourceURL=addSurvey.js
-		</script>
+		</script>-->
 		<% include partials/scripts.ejs %>
 	</body>
 </html>
