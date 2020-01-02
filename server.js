@@ -18,7 +18,7 @@ server.use(logger('dev'));
 // server.use(express.urlencoded({extended: false}));
 server.use(cookieParser());
 server.use(bodyParser.json());
-server.use(bodyParser.urlencoded({ extended: false }));
+server.use(bodyParser.urlencoded({ extended: true}));
 server.use(express.static(path.join(__dirname, 'public')));
 
 server.use('/', indexRouter);

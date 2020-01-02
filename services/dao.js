@@ -91,14 +91,30 @@ async function getQuestionTypes() {
 
 async function postQuestion(question) {
     try {
-        await dbConfig.pool.query(
+        let result = await dbConfig.pool.query(
             "INSERT INTO survey_copy.question (question, type_id, category_id, survey_id) " +
-            "VALUES ($1, $2, $3, $4);", [question.text, question.type_id, question.category_id, question.survey_id]
+            "VALUES ($1, $2, $3, $4) RETURNING id", [question.text, question.type_id, question.category_id, question.survey_id]
         );
+        return result.rows[0].id;
     } catch (e) {
         console.error(e);
         throw e;
     }
+}
+
+async function postQuestionOptions(id, options) {
+    try {
+        for (let i = 0; i < options.length; i++) {
+            await dbConfig.pool.query(
+                "INSERT INTO survey_copy.multiple_choices(question_id, answer) VALUES ($1, $2);",
+                [id, options[i]]
+            );
+        }
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
+
 }
 
 module.exports = {
@@ -110,5 +126,6 @@ module.exports = {
     getQuestionTypes,
     getSurveysWithSubjectNames,
     deleteSurvey,
-    postQuestion
+    postQuestion,
+    postQuestionOptions
 };

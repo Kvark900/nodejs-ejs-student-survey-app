@@ -24,12 +24,12 @@ router.get('/question', async (req, res, next) => {
     let categories = await dao.getQuestionCategories();
     res.render('question',
         {
-                    title: 'Question',
-                    questions: questions.rows,
-                    surveys: surveys.rows,
-                    types: types.rows,
-                    categories: categories.rows
-                });
+            title: 'Question',
+            questions: questions.rows,
+            surveys: surveys.rows,
+            types: types.rows,
+            categories: categories.rows
+        });
 });
 
 
@@ -55,10 +55,14 @@ router.delete("/survey/:id", (async (req, res) => {
 router.post("/question", async (req, res) => {
     let question = req.body;
     try {
-       await dao.postQuestion(question);
-       console.info("Question has been saved: ");
-       console.info(question);
-       res.sendStatus(200);
+        let id = await dao.postQuestion(question);
+        console.log("ID of saved question is: " + id);
+        console.info("Question has been saved: ");
+        console.info(question);
+
+        if (question.options.length > 1)
+            await dao.postQuestionOptions(id, question.options);
+        res.sendStatus(200);
     } catch (e) {
         console.error(e);
         res.status(400).send(e.message)
