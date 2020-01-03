@@ -75,7 +75,6 @@ router.get('/question', async (req, res, next) => {
         {
             title: 'Question',
             moment: moment,
-            axios: axios,
             subjects: subjects.rows,
             lectures: lectures.rows,
         });

@@ -18,8 +18,8 @@ body {
 
 }
 
-#profContent{
-    width: 50%;
+#profContent {
+    width: 75%;
     padding-left: 100px;
 }
 
@@ -68,6 +68,10 @@ body {
     padding: 30px 0;
     display: flex;
 
+}
+
+#resultTable th,td{
+    padding-right: 30px;
 }
 
 #addSurveyBtn {
