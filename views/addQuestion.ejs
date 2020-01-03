@@ -26,7 +26,7 @@
 						<div class="col-sm-10 d-flex">
 							<select required
 							        class="custom-select"
-							        id="subjectBox">
+							        id="lectureBox">
 								<% for (let i = 0; i < lectures.length; i++){ %>
 									<option value="<%= lectures[i].id %>">
 										<%= moment(lectures[i].date_time).format('DD.MM.YYYY h:mm:ss') %> <%= lectures[i].subject_name %>
@@ -152,6 +152,7 @@
 
 
 		<script>
+
         function renderMultipleChoices() {
             let isMultiple = $("#questionTypeBox")[0].value == 2 || $("#questionTypeBox")[0].value == 3;
             let options = $("textarea[id*='option']");
@@ -193,11 +194,18 @@
         function postQuestion() {
             let question = createQuestion();
             if (question === false) return;
+            let url = "/question";
+            let type = "POST";
+		        <% if(locals.current) { %>
+							question.id = <%= current.id;%>;
+							url = "/api/question/" + <%= current.id;%>;
+							type = "PUT";
+	          <%}%>
             console.log("JSON question is ")
             console.log(question)
             $.ajax({
-                url: "/question",
-                type: 'POST',
+                url: url,
+                type: type,
                 data: question,
                 error: (xhr, error) => {
                     // console.debug(xhr);
@@ -229,7 +237,7 @@
                 if (formFields[i].disabled) continue;
                 if (formFields[i].id === "questionText")
                     question.text = formFields[i].value;
-                else if (formFields[i].id === "subjectBox")
+                else if (formFields[i].id === "lectureBox")
                     question.lecture_id = parseInt(formFields[i].value);
                 else if (formFields[i].id === "questionCategoryBox")
                     question.category_id = parseInt(formFields[i].value);
@@ -264,9 +272,20 @@
                 formFields[i].value = "";
             }
         }
-
         //# sourceURL= question.js
 		</script>
 		<% include partials/scripts.ejs %>
+		<script>
+        function initValues() {
+					<% if(locals.current) { %>
+            $("#lectureBox")[0].value = <%=current.lecture_id%>;
+            $("#questionTypeBox")[0].value = <%=current.type_id%>;
+            $("#questionCategoryBox")[0].value = <%=current.category_id%>;
+            $("#questionText")[0].value = "<%=current.question%>";
+					<% } %>
+        }
+
+        document.onload = initValues();
+		</script>
 	</body>
 </html>
