@@ -103,14 +103,24 @@ router.put("/api/question/:id", (async (req, res) => {
 
 
 
-router.get('/api/question/:lectureId', async (req, res, next) => {
+router.get('/api/question', async (req, res, next) => {
     try {
-        let questions = await dao.getQuestionsByLectureId(req.params.lectureId);
+        let questions = await dao.getQuestionsByLectureId(req.query.lectureId);
         res.status(200).send(questions.rows);
     } catch (e) {
         res.status(400).send(e.message)
     }
 });
+
+router.get('/api/lecture', async (req, res, next) => {
+    try {
+        let questions = await dao.getLecturesBySubjectId(req.query.subjectId);
+        res.status(200).send(questions.rows);
+    } catch (e) {
+        res.status(400).send(e.message)
+    }
+});
+
 
 router.post("/question", async (req, res) => {
     let question = req.body;

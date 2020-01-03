@@ -72,11 +72,14 @@ async function getSurveysWithSubjectNames() {
 
 async function getLecturesWithSubjectNames() {
     try {
-        let queryResult = await dbConfig.pool.query(
-            "SELECT l.*, s.name subject_name " +
-            "FROM survey_copy.lecture l " +
-            "JOIN survey_copy.subject s " +
-            "ON l.subject_id = s.id");
+        let query = `
+                SELECT l.*, s.name subject_name
+                FROM survey_copy.lecture l
+                JOIN survey_copy.subject s
+                ON l.subject_id = s.id;
+        `;
+
+        let queryResult = await dbConfig.pool.query(query);
         console.info(new Date() + ": Getting lectures with subject names success");
         return queryResult;
     } catch (e) {
@@ -147,6 +150,24 @@ async function getQuestionsByLectureId(lecture_id) {
                   `;
         let result = await dbConfig.pool.query(sql, [lecture_id]);
         console.info(new Date() + ": Getting questions by lecture id success");
+        return result;
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
+}
+
+async function getLecturesBySubjectId(subjectId) {
+    try {
+        let query = `
+                SELECT l.*, s.name subject_name
+                FROM survey_copy.lecture l
+                JOIN survey_copy.subject s
+                ON l.subject_id = s.id
+                WHERE l.subject_id = $1;
+        `;
+        let result = await dbConfig.pool.query(query, [subjectId]);
+        console.info(new Date() + ": Getting lectures by subject id success");
         return result;
     } catch (e) {
         console.error(e);
@@ -225,6 +246,7 @@ module.exports = {
     getQuestionCategories,
     getQuestionTypes,
     getQuestionsByLectureId,
+    getLecturesBySubjectId,
     getSurveysWithSubjectNames,
     getLecturesWithSubjectNames,
     getSubjectsByProfessorId,
