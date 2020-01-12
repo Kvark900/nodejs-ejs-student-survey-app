@@ -42,9 +42,6 @@
 						        class="custom-select"
 						        onchange="reRenderQuestions()"
 						        id="lectureBox">
-							<option value="">
-								Choose subject first!
-							</option>
 						</select>
 					</div>
 				</div>
@@ -56,9 +53,6 @@
 						<select required
 						        class="custom-select"
 						        id="questionBox">
-							<option value="">
-								Choose lecture first!
-							</option>
 						</select>
 					</div>
 				</div>
@@ -96,6 +90,17 @@
             $.get(url).then((res) => {
                 let lectureBox = $("#lectureBox")[0];
                 lectureBox.innerHTML = "";
+                if (res.length === 0) {
+                    let option =
+                        `<option value="">
+														No lectures
+													</option>
+		                    `;
+                    lectureBox.insertAdjacentHTML("beforeend", option);
+                    reRenderQuestions();
+                    return;
+                }
+
                 for (let i = 0; i < res.length; i++) {
                     let date = res[i].date_time;
                     let option =
@@ -105,6 +110,7 @@
 		                    `;
                     lectureBox.insertAdjacentHTML("beforeend", option);
                 }
+                reRenderQuestions();
             });
         }
 
@@ -114,6 +120,15 @@
             $.get(url).then((res) => {
                 let questionBox = $("#questionBox")[0];
                 questionBox.innerHTML = "";
+                if (res.length === 0) {
+                    let option =
+                        `<option value="">
+														No questions
+													</option>
+		                    `;
+                    questionBox.insertAdjacentHTML("beforeend", option);
+                    return;
+                }
                 for (let i = 0; i < res.length; i++) {
                     let option =
                         `<option value=${res[i].id}>
@@ -194,7 +209,6 @@
 		<% include partials/scripts.ejs %>
 		<script>
         document.onload = reRenderLectures();
-        document.onload = reRenderQuestions();
 		</script>
 	</body>
 </html>

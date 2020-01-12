@@ -148,7 +148,7 @@ async function getQuestionsByLectureId(lecture_id) {
                    ON q.type_id = t.id
                    WHERE lecture_id = $1;
                   `;
-        let result = await dbConfig.pool.query(query, [lecture_id]);
+        let result = await dbConfig.pool.query(query, [isNaN(lecture_id) ? null : lecture_id]);
         console.info(new Date() + ": Getting questions by lecture id success");
         return result;
     } catch (e) {

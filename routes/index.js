@@ -113,7 +113,7 @@ router.put("/api/question/:id", (async (req, res) => {
 
 router.get('/api/question', async (req, res, next) => {
     try {
-        let questions = await dao.getQuestionsByLectureId(req.query.lectureId);
+        let questions = await dao.getQuestionsByLectureId(parseInt(req.query.lectureId));
         res.status(200).send(questions.rows);
     } catch (e) {
         res.status(400).send(e.message)
