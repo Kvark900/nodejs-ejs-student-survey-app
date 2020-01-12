@@ -140,7 +140,7 @@ async function getQuestionCategories() {
 
 async function getQuestionsByLectureId(lecture_id) {
     try {
-        let sql = `SELECT q.*, t.name AS type, c.name AS category
+        let query = `SELECT q.*, t.name AS type, c.name AS category
                    FROM survey_copy.question q
                    JOIN survey_copy.question_category c
                    ON q.category_id = c.id
@@ -148,8 +148,30 @@ async function getQuestionsByLectureId(lecture_id) {
                    ON q.type_id = t.id
                    WHERE lecture_id = $1;
                   `;
-        let result = await dbConfig.pool.query(sql, [lecture_id]);
+        let result = await dbConfig.pool.query(query, [lecture_id]);
         console.info(new Date() + ": Getting questions by lecture id success");
+        return result;
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
+}
+
+async function getAnswers(lectureId, questionId) {
+    try {
+        let query = `SELECT qa.*,
+                            s.name || ' ' || s.surname student,
+                            q.question
+                     FROM survey_copy.question_answer qa
+                     JOIN survey_copy.question q
+                     ON qa.question_id = q.id
+                     LEFT JOIN  survey_copy.student s
+                     ON s.id = qa.student_id
+                     WHERE q.lecture_id = coalesce($1, q.lecture_id)
+                     AND q.id = coalesce($2, q.id);`;
+
+        let result = await dbConfig.pool.query(query, [isNaN(lectureId) ? null : lectureId, isNaN(questionId) ? null : questionId]);
+        console.info(new Date() + ": Getting answers success");
         return result;
     } catch (e) {
         console.error(e);
@@ -225,6 +247,7 @@ async function getSubjectsByProfessorId(id) {
     }
 }
 
+
 async function getQuestion(id) {
     try {
         let result = await dbConfig.pool.query(
@@ -246,6 +269,7 @@ module.exports = {
     getQuestionCategories,
     getQuestionTypes,
     getQuestionsByLectureId,
+    getAnswers,
     getLecturesBySubjectId,
     getSurveysWithSubjectNames,
     getLecturesWithSubjectNames,

@@ -70,13 +70,21 @@ router.get('/updateQuestion/:id', async (req, res, next) => {
 
 router.get('/question', async (req, res, next) => {
     let subjects = await dao.getSubjectsByProfessorId(2); // TODO: get currently logged in professor's id
-    let lectures = await dao.getLecturesWithSubjectNames();
     res.render('questionFinder',
         {
             title: 'Question',
             moment: moment,
             subjects: subjects.rows,
-            lectures: lectures.rows,
+        });
+});
+
+router.get('/answers', async (req, res, next) => {
+    let subjects = await dao.getSubjectsByProfessorId(2); // TODO: get currently logged in professor's id
+    res.render('answerFinder',
+        {
+            title: 'Answer',
+            moment: moment,
+            subjects: subjects.rows,
         });
 });
 
@@ -107,6 +115,15 @@ router.get('/api/question', async (req, res, next) => {
     try {
         let questions = await dao.getQuestionsByLectureId(req.query.lectureId);
         res.status(200).send(questions.rows);
+    } catch (e) {
+        res.status(400).send(e.message)
+    }
+});
+
+router.get('/api/answer', async (req, res, next) => {
+    try {
+        let answers = await dao.getAnswers(parseInt(req.query.lectureId), parseInt(req.query.questionId));
+        res.status(200).send(answers.rows);
     } catch (e) {
         res.status(400).send(e.message)
     }

@@ -9,13 +9,12 @@ body {
 }
 
 #surveyTable {
-  width: 100%;
+    width: 100%;
 }
 
 #surveyPanel {
     display: flex;
     flex-direction: column;
-
 }
 
 #profContent {
@@ -23,7 +22,7 @@ body {
     padding-left: 20px;
 }
 
-#alertsPanel{
+#alertsPanel {
     padding-left: 20px;
 }
 
@@ -44,12 +43,17 @@ body {
     transition: all 0.4s;
 }
 
-@media (max-width: 768px) {
-    #sidebar {
+
+@media screen and (max-width: 900px) {
+    /*#sidebar {
         margin-left: -17rem;
     }
+*/
+    body {
+        background-color: blue;
+    }
 
-    #sidebar.active {
+    /*#sidebar.active {
         margin-left: 0;
     }
 
@@ -62,6 +66,10 @@ body {
         margin-left: 17rem;
         width: calc(100% - 17rem);
     }
+
+    #profContent {
+        width: 95%;
+    }*/
 }
 
 #content {
@@ -70,7 +78,7 @@ body {
 
 }
 
-#resultTable th,td{
+#resultTable th, td {
     padding-right: 30px;
 }
 
@@ -79,7 +87,7 @@ body {
 
 }
 
-#sidebar{
+#sidebar {
     height: 100%;
 }
 
