@@ -2,6 +2,37 @@ const express = require('express');
 const router = express.Router();
 const dao = require('../services/dao');
 const moment = require("moment");
+const xlsxnp = require("xlsx");
+// const upload = require("express-fileupload");
+
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    // reject a file
+    if (file.mimetype === 'application/vnd.ms-excel' ||
+        file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+};
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter
+});
 
 
 /* GET home page. */
@@ -110,7 +141,6 @@ router.put("/api/question/:id", (async (req, res) => {
 }));
 
 
-
 router.get('/api/question', async (req, res, next) => {
     try {
         let questions = await dao.getQuestionsByLectureId(parseInt(req.query.lectureId));
@@ -155,5 +185,50 @@ router.post("/question", async (req, res) => {
         res.status(400).send(e.message)
     }
 });
+
+router.post("/xlsQuestion", upload.single('excel'), async (req, res) => {
+    try {
+        let excel = req.file;
+        if (!excel) throw new Error("Unsupported file type! Please select excel file");
+        console.log("From node:\n" + excel);
+        res.sendStatus(200);
+    } catch (e) {
+        console.error(e);
+        res.status(400).send(e.message)
+    }
+});
+
+router.post("/", upload.single('productImage'), (req, res, next) => {
+    const product = new Product({
+        _id: new mongoose.Types.ObjectId(),
+        name: req.body.name,
+        price: req.body.price,
+        productImage: req.file.path
+    });
+    product
+        .save()
+        .then(result => {
+            console.log(result);
+            res.status(201).json({
+                message: "Created product successfully",
+                createdProduct: {
+                    name: result.name,
+                    price: result.price,
+                    _id: result._id,
+                    request: {
+                        type: 'GET',
+                        url: "http://localhost:3000/products/" + result._id
+                    }
+                }
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+});
+
 
 module.exports = router;

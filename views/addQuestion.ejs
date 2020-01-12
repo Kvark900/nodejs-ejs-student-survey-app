@@ -1,187 +1,204 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <% include partials/head.ejs %>
-</head>
-<body>
+	<head>
+		<% include partials/head.ejs %>
+	</head>
+	<body>
 
-<header>
-    <% include partials/header.ejs %>
-</header>
+		<header>
+			<% include partials/header.ejs %>
+		</header>
 
 
-<div id="content">
-    <!-- Vertical navbar -->
-    <%- include partials/sidebar.ejs %>
-    <!-- End vertical navbar -->
-    <div id="profContent">
-        <h2>Question</h2>
-        <span id="invalidFormMsg"
-              style="display:none;">Please enter all required fields </span>
-        <form id="addQuestionForm">
-            <div class="form-group row">
-                <label for="lectureBox"
-                       class="col-sm-2 col-form-label">Lecture
-                </label>
-                <div class="col-sm-10 d-flex">
-                    <select required
-                            class="custom-select"
-                            id="lectureBox">
-                        <% for (let i = 0; i < lectures.length; i++){ %>
-                            <option value="<%= lectures[i].id %>">
-                                <%= moment(lectures[i].date_time).format('DD.MM.YYYY h:mm:ss') %> <%= lectures[i].subject_name %>
-                            </option>
-                        <% } %>
-                    </select>
-                </div>
-            </div>
+		<div id="content">
+			<!-- Vertical navbar -->
+			<%- include partials/sidebar.ejs %>
+			<!-- End vertical navbar -->
+			<div id="profContent">
+				<h2>Question</h2>
+				<span id="invalidFormMsg"
+				      style="display:none;">Please enter all required fields </span>
 
-            <div class="form-group row">
-                <label for="questionCategoryBox"
-                       class="col-sm-2 col-form-label">Category
-                </label>
-                <div class="col-sm-10 d-flex">
-                    <select required
-                            class="custom-select"
-                            id="questionCategoryBox">
-                        <% for (let i = 0; i < categories.length; i++){ %>
-                            <option value="<%= categories[i].id %>">
-                                <%= categories[i].name %>
-                            </option>
-                        <% } %>
-                    </select>
-                </div>
-            </div>
+				<form id="xlsQuestion"
+				      enctype="multipart/form-data"
+				      method="post"
+				      name="xlsQuestion">
+					<div class="form-group row">
+						<input type="file"
+						       class="col-sm-10 form-control-file"
+						       id="XLSQFile">
+						<button id="uploadXLSQ"
+						        type="button"
+						        onclick="importExcel()"
+						        class="col-sm-2 btn btn-primary btn-sm">Import
+						</button>
+					</div>
 
-            <div class="form-group row">
-                <label for="questionTypeBox"
-                       class="col-sm-2 col-form-label">Type
-                </label>
-                <div class="col-sm-10 d-flex">
-                    <select required
-                            class="custom-select"
-                            onchange="renderMultipleChoices()"
-                            id="questionTypeBox">
-                        <% for (let i = 0; i < types.length; i++){ %>
-                            <option value="<%= types[i].id %>">
-                                <%= types[i].name %>
-                            </option>
-                        <% } %>
-                    </select>
-                </div>
-            </div>
+				</form>
+				<form id="addQuestionForm">
+					<div class="form-group row">
+						<label for="lectureBox"
+						       class="col-sm-2 col-form-label">Lecture
+						</label>
+						<div class="col-sm-10 d-flex">
+							<select required
+							        class="custom-select"
+							        id="lectureBox">
+								<% for (let i = 0; i < lectures.length; i++){ %>
+									<option value="<%= lectures[i].id %>">
+										<%= moment(lectures[i].date_time).format('DD.MM.YYYY h:mm:ss') %> <%= lectures[i].subject_name %>
+									</option>
+								<% } %>
+							</select>
+						</div>
+					</div>
 
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label"
-                       for="questionText">Question
-                </label>
-                <div class="col-sm-10 d-flex">
+					<div class="form-group row">
+						<label for="questionCategoryBox"
+						       class="col-sm-2 col-form-label">Category
+						</label>
+						<div class="col-sm-10 d-flex">
+							<select required
+							        class="custom-select"
+							        id="questionCategoryBox">
+								<% for (let i = 0; i < categories.length; i++){ %>
+									<option value="<%= categories[i].id %>">
+										<%= categories[i].name %>
+									</option>
+								<% } %>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="questionTypeBox"
+						       class="col-sm-2 col-form-label">Type
+						</label>
+						<div class="col-sm-10 d-flex">
+							<select required
+							        class="custom-select"
+							        onchange="renderMultipleChoices()"
+							        id="questionTypeBox">
+								<% for (let i = 0; i < types.length; i++){ %>
+									<option value="<%= types[i].id %>">
+										<%= types[i].name %>
+									</option>
+								<% } %>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label class="col-sm-2 col-form-label"
+						       for="questionText">Question
+						</label>
+						<div class="col-sm-10 d-flex">
 							<textarea required
-                                      class="form-control rounded-0"
-                                      id="questionText"
-                                      rows="5"></textarea>
-                </div>
-            </div>
+							          class="form-control rounded-0"
+							          id="questionText"
+							          rows="5"></textarea>
+						</div>
+					</div>
 
-            <div id="multipleChoicesPanel">
-                <label class="col-sm-2 col-form-label">
-                    Multiple options:
-                </label>
-                <div class="form-group row">
-                    <label for="multipleChoiceBox"
-                           class="col-sm-2 col-form-label">
-                    </label>
-                    <div class="col-sm-10 d-flex">
+					<div id="multipleChoicesPanel">
+						<label class="col-sm-2 col-form-label">
+							Multiple options:
+						</label>
+						<div class="form-group row">
+							<label for="multipleChoiceBox"
+							       class="col-sm-2 col-form-label">
+							</label>
+							<div class="col-sm-10 d-flex">
 							<textarea class="form-control rounded-0"
-                                      disabled
-                                      required
-                                      id="option1"
-                                      rows="2"></textarea>
-                    </div>
-                </div>
+							          disabled
+							          required
+							          id="option1"
+							          rows="2"></textarea>
+							</div>
+						</div>
 
-                <div class="form-group row">
-                    <label for="multipleChoiceBox"
-                           class="col-sm-2 col-form-label">
-                    </label>
-                    <div class="col-sm-10 d-flex">
+						<div class="form-group row">
+							<label for="multipleChoiceBox"
+							       class="col-sm-2 col-form-label">
+							</label>
+							<div class="col-sm-10 d-flex">
 							<textarea class="form-control rounded-0"
-                                      disabled
-                                      required
-                                      id="option2"
-                                      rows="2"></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row d-flex flex-row-reverse">
-                <button type="button"
-                        disabled
-                        id="addOptionBtn"
-                        onclick="renderNewOptionBox()"
-                        class="btn btn-secondary">New Option
-                </button>
-            </div>
-            <hr/>
-            <div class="form-group row d-flex flex-row-reverse">
-                <button type="button"
-                        id="addQuestionBtn"
-                        onclick="postQuestion()"
-                        class="btn btn-primary">Add Question
-                </button>
-                <button onclick="goBack()"
-                        style="margin-right: 20px"
-                        type="button"
-                        class="btn btn-secondary">Cancel
-                </button>
+							          disabled
+							          required
+							          id="option2"
+							          rows="2"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="form-group row d-flex flex-row-reverse">
+						<button type="button"
+						        disabled
+						        id="addOptionBtn"
+						        onclick="renderNewOptionBox()"
+						        class="btn btn-secondary">New Option
+						</button>
+					</div>
+					<hr/>
+					<div class="form-group row d-flex flex-row-reverse">
+						<button type="button"
+						        id="addQuestionBtn"
+						        onclick="postQuestion()"
+						        class="btn btn-primary">Add Question
+						</button>
+						<button onclick="goBack()"
+						        style="margin-right: 20px"
+						        type="button"
+						        class="btn btn-secondary">Cancel
+						</button>
 
-            </div>
+					</div>
 
-        </form>
-    </div>
-    <div id="alertsPanel">
-        <div id="successPanel"
-             style="display: none"
-             class="alert alert-success alert-dismissible fade show"
-             role="alert">
+				</form>
+			</div>
+			<div id="alertsPanel">
+				<div id="successPanel"
+				     style="display: none"
+				     class="alert alert-success alert-dismissible fade show"
+				     role="alert">
 					<span>
 						<strong>Success!</strong>
-                        <% if(locals.current) { %>
-                            Question updated!
-                        <% } else { %>
-                            Question added!
-                        <% } %>
-                    </span>
-            <button type="button"
-                    class="close"
-                    data-dismiss="alert"
-                    aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </div>
-</div>
+						<% if(locals.current) { %>
+							Question updated!
+						<% } else { %>
+							Question added!
+						<% } %>
+					</span>
+					<button type="button"
+					        class="close"
+					        data-dismiss="alert"
+					        aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+			</div>
+		</div>
 
 
-<script>
-    function goBack() {
-        window.location.replace("http://localhost:3000/question");
-    }
-
-    function renderMultipleChoices() {
-        let isMultiple = $("#questionTypeBox")[0].value == 2 || $("#questionTypeBox")[0].value == 3;
-        let options = $("textarea[id*='option']");
-        $("#addOptionBtn")[0].disabled = !isMultiple;
-        for (let i = 0; i < options.length; i++) {
-            options[i].disabled = !isMultiple;
-            if (!isMultiple)
-                options[i].classList.remove("is-invalid");
+		<script>
+        function goBack() {
+            window.location.replace("http://localhost:3000/question");
         }
-    }
 
-    function renderNewOptionBox() {
-        let panel = $("#multipleChoicesPanel")[0];
-        let x = panel.children.length + 1;
-        let newOption = `<div id="optionRow${x}"
+        function renderMultipleChoices() {
+            let isMultiple = $("#questionTypeBox")[0].value == 2 || $("#questionTypeBox")[0].value == 3;
+            let options = $("textarea[id*='option']");
+            $("#addOptionBtn")[0].disabled = !isMultiple;
+            for (let i = 0; i < options.length; i++) {
+                options[i].disabled = !isMultiple;
+                if (!isMultiple)
+                    options[i].classList.remove("is-invalid");
+            }
+        }
+
+        function renderNewOptionBox() {
+            let panel = $("#multipleChoicesPanel")[0];
+            let x = panel.children.length + 1;
+            let newOption = `<div id="optionRow${x}"
 																	class="form-group row">
 																<label for="multipleChoiceBox"
 																       class="col-sm-2 col-form-label">
@@ -198,111 +215,135 @@
 									                      src="https://img.icons8.com/carbon-copy/100/000000/delete-forever--v1.png"/>
 																</div>
 														</div>`
-        panel.insertAdjacentHTML("beforeend", newOption);
-    }
+            panel.insertAdjacentHTML("beforeend", newOption);
+        }
 
-    function removeOption(id) {
-        $("#optionRow" + id)[0].remove()
-    }
+        function removeOption(id) {
+            $("#optionRow" + id)[0].remove()
+        }
 
-    function postQuestion() {
-        let question = createQuestion();
-        if (question === false) return;
-        let url = "/question";
-        let type = "POST";
-        <% if(locals.current) { %>
-        question.id = <%= current.id; %>;
-        url = "/api/question/" + <%= current.id; %>;
-        type = "PUT";
-        <% } %>
-        console.log("JSON question is ")
-        console.log(question)
-        $.ajax({
-            url: url,
-            type: type,
-            data: question,
-            error: (xhr, error) => {
-                // console.debug(xhr);
-                console.error("Error in ajax req: " + error);
-            },
-            success: () => {
-                console.log("Question post success");
-                $("#successPanel")[0].style = "display: flex"
-                <% if(!locals.current) { %>
-                resetFields();
-                <% } %>
+        function postQuestion() {
+            let question = createQuestion();
+            if (question === false) return;
+            let url = "/question";
+            let type = "POST";
+					<% if(locals.current) { %>
+            question.id = <%= current.id; %>;
+            url = "/api/question/" + <%= current.id; %>;
+            type = "PUT";
+					<% } %>
+            console.log("JSON question is ")
+            console.log(question)
+            $.ajax({
+                url: url,
+                type: type,
+                data: question,
+                error: (xhr, error) => {
+                    // console.debug(xhr);
+                    console.error("Error in ajax req: " + error);
+                },
+                success: () => {
+                    console.log("Question post success");
+                    $("#successPanel")[0].style = "display: flex"
+									<% if(!locals.current) { %>
+                    resetFields();
+									<% } %>
+                }
+            });
+        }
+
+        function createQuestion() {
+            let validForm = true;
+
+            let question = {
+                lecture_id: "",
+                type_id: "",
+                category_id: "",
+                text: "",
+                options: []
+            };
+
+            let formFields = $("#addQuestionForm select, input, textarea");
+
+            for (let i = 0; i < formFields.length; i++) {
+                validateField(formFields[i]);
+                if (formFields[i].disabled) continue;
+                if (formFields[i].id === "questionText")
+                    question.text = formFields[i].value;
+                else if (formFields[i].id === "lectureBox")
+                    question.lecture_id = parseInt(formFields[i].value);
+                else if (formFields[i].id === "questionCategoryBox")
+                    question.category_id = parseInt(formFields[i].value);
+                else if (formFields[i].id === "questionTypeBox")
+                    question.type_id = parseInt(formFields[i].value);
+                else if (formFields[i].id.includes("option"))
+                    question.options.push(formFields[i].value)
             }
-        });
-    }
+            if (!validForm) {
+                $("#invalidFormMsg")[0].style = "display:block; color: red; padding-bottom:20px";
+                return false;
+            } else {
+                $("#invalidFormMsg")[0].style = "display:none;"
+            }
 
-    function createQuestion() {
-        let validForm = true;
+            console.log(question);
 
-        let question = {
-            lecture_id: "",
-            type_id: "",
-            category_id: "",
-            text: "",
-            options: []
-        };
+            function validateField(field) {
+                if (!field.disabled && field.required && field.value === "") {
+                    field.classList.add("is-invalid");
+                    validForm = false;
+                } else field.classList.remove("is-invalid");
+            }
 
-        let formFields = $("#addQuestionForm select, input, textarea");
-
-        for (let i = 0; i < formFields.length; i++) {
-            validateField(formFields[i]);
-            if (formFields[i].disabled) continue;
-            if (formFields[i].id === "questionText")
-                question.text = formFields[i].value;
-            else if (formFields[i].id === "lectureBox")
-                question.lecture_id = parseInt(formFields[i].value);
-            else if (formFields[i].id === "questionCategoryBox")
-                question.category_id = parseInt(formFields[i].value);
-            else if (formFields[i].id === "questionTypeBox")
-                question.type_id = parseInt(formFields[i].value);
-            else if (formFields[i].id.includes("option"))
-                question.options.push(formFields[i].value)
-        }
-        if (!validForm) {
-            $("#invalidFormMsg")[0].style = "display:block; color: red; padding-bottom:20px";
-            return false;
-        } else {
-            $("#invalidFormMsg")[0].style = "display:none;"
+            return question;
         }
 
-        console.log(question);
-
-        function validateField(field) {
-            if (!field.disabled && field.required && field.value === "") {
-                field.classList.add("is-invalid");
-                validForm = false;
-            } else field.classList.remove("is-invalid");
+        function resetFields() {
+            let formFields = $("#addQuestionForm select, input, textarea");
+            for (let i = 0; i < formFields.length; i++) {
+                if (formFields[i].disabled) continue;
+                formFields[i].value = "";
+            }
         }
 
-        return question;
-    }
+        function importExcel() {
+            let file = $("#XLSQFile")[0].files[0];
+            let data = new FormData();
+            data.append("file", file);
 
-    function resetFields() {
-        let formFields = $("#addQuestionForm select, input, textarea");
-        for (let i = 0; i < formFields.length; i++) {
-            if (formFields[i].disabled) continue;
-            formFields[i].value = "";
+            $.ajax({
+                url: "/xlsQuestion",
+                type: "POST",
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+
+                error: (xhr, error) => {
+                    // console.debug(xhr);
+                    console.error("Error in ajax req: " + error);
+                },
+                success: () => {
+                    console.log("File posted:\n" + file);
+                }
+            });
+
         }
-    }
 
-    //# sourceURL= question.js
-</script>
-<% include partials/scripts.ejs %>
-<script>
-    function initValues() {
-        <% if(locals.current) { %>
-        $("#lectureBox")[0].value = <%= current.lecture_id %>;
-        $("#questionTypeBox")[0].value = <%= current.type_id %>;
-        $("#questionCategoryBox")[0].value = <%= current.category_id %>;
-        $("#questionText")[0].value = "<%= current.question %>";
-        <% } %>
-    }
+        //# sourceURL= question.js
+		</script>
+		<% include partials/scripts.ejs %>
+		<script>
+        function initValues() {
+					<% if(locals.current) { %>
+            $("#lectureBox")[0].value = <%= current.lecture_id %>;
+            $("#questionTypeBox")[0].value = <%= current.type_id %>;
+            $("#questionCategoryBox")[0].value = <%= current.category_id %>;
+            $("#questionText")[0].value = "<%= current.question %>";
+					<% } %>
+        }
 
-    document.onload = initValues();
-</script>
-</body>
+        document.onload = initValues();
+		</script>
+	</body>
 </html>
