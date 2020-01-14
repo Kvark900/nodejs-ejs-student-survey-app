@@ -239,7 +239,6 @@
                 type: type,
                 data: question,
                 error: (xhr, error) => {
-                    // console.debug(xhr);
                     console.error("Error in ajax req: " + error);
                 },
                 success: () => {
@@ -309,25 +308,14 @@
         function importExcel() {
             let file = $("#XLSQFile")[0].files[0];
             let data = new FormData();
-            data.append("file", file);
-
-            $.ajax({
-                url: "/xlsQuestion",
-                type: "POST",
-                data: data,
-                cache: false,
-                contentType: false,
-                processData: false,
-
-                error: (xhr, error) => {
-                    // console.debug(xhr);
-                    console.error("Error in ajax req: " + error);
-                },
-                success: () => {
-                    console.log("File posted:\n" + file);
-                }
+            data.append("excel", file);
+            axios.post('/api/xlsQuestion', data)
+                .then(function (response) {
+                    console.log(response);
+                })
+		            .catch(response => {
+                console.log(response);
             });
-
         }
 
         //# sourceURL= question.js
@@ -342,7 +330,6 @@
             $("#questionText")[0].value = "<%= current.question %>";
 					<% } %>
         }
-
         document.onload = initValues();
 		</script>
 	</body>

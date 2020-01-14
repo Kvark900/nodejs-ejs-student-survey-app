@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const dao = require('../services/dao');
 const moment = require("moment");
-const xlsxnp = require("xlsx");
+const xlsx = require("xlsx");
+const path = require('path');
+
 // const upload = require("express-fileupload");
 
 const multer = require('multer');
@@ -186,11 +188,17 @@ router.post("/question", async (req, res) => {
     }
 });
 
-router.post("/xlsQuestion", upload.single('excel'), async (req, res) => {
+router.post("/api/xlsQuestion", upload.single('excel'), async (req, res) => {
     try {
         let excel = req.file;
         if (!excel) throw new Error("Unsupported file type! Please select excel file");
         console.log("From node:\n" + excel);
+        console.log(path.join(__dirname, '..', 'uploads', excel.filename));
+        let workBook = xlsx.readFile(path.join(__dirname, '..', 'uploads', excel.filename));
+        console.log(xlsx.utils.sheet_to_json(workBook.Sheets["Questions"]));
+        let questions = xlsx.utils.sheet_to_json(workBook.Sheets["Questions"]);
+
+        // console.log(workBook);
         res.sendStatus(200);
     } catch (e) {
         console.error(e);
