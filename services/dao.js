@@ -260,6 +260,12 @@ async function getQuestion(id) {
     }
 }
 
+async function batchInsert(questions) {
+    for (let question of questions) {
+        await postQuestion(question);
+    }
+}
+
 
 module.exports = {
     getSubjects,
@@ -280,5 +286,6 @@ module.exports = {
     getQuestion,
     postQuestionOptions,
     postLecture,
-    updateQuestion
+    updateQuestion,
+    batchInsert
 };

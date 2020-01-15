@@ -4,6 +4,7 @@ const dao = require('../services/dao');
 const moment = require("moment");
 const xlsx = require("xlsx");
 const path = require('path');
+const fs = require('fs');
 
 // const upload = require("express-fileupload");
 
@@ -192,19 +193,24 @@ router.post("/api/xlsQuestion", upload.single('excel'), async (req, res) => {
     try {
         let excel = req.file;
         if (!excel) throw new Error("Unsupported file type! Please select excel file");
-        console.log("From node:\n" + excel);
-        console.log(path.join(__dirname, '..', 'uploads', excel.filename));
-        let workBook = xlsx.readFile(path.join(__dirname, '..', 'uploads', excel.filename));
-        console.log(xlsx.utils.sheet_to_json(workBook.Sheets["Questions"]));
+        let filePath = path.join(__dirname, '..', 'uploads', excel.filename);
+        let workBook = xlsx.readFile(filePath);
         let questions = xlsx.utils.sheet_to_json(workBook.Sheets["Questions"]);
-
-        // console.log(workBook);
+        deleteFile(filePath);
+        await dao.batchInsert(questions);
         res.sendStatus(200);
     } catch (e) {
         console.error(e);
         res.status(400).send(e.message)
     }
 });
+
+function deleteFile(filePath) {
+    fs.unlink(filePath, (err) => {
+        if (err) throw err;
+        console.log(`${path} deleted'`);
+    });
+}
 
 router.post("/", upload.single('productImage'), (req, res, next) => {
     const product = new Product({
@@ -237,6 +243,5 @@ router.post("/", upload.single('productImage'), (req, res, next) => {
             });
         });
 });
-
 
 module.exports = router;
