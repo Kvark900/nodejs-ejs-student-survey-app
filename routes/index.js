@@ -6,8 +6,6 @@ const xlsx = require("xlsx");
 const path = require('path');
 const fs = require('fs');
 
-// const upload = require("express-fileupload");
-
 const multer = require('multer');
 
 const storage = multer.diskStorage({
@@ -155,7 +153,7 @@ router.get('/api/question', async (req, res, next) => {
 
 router.get('/api/answer', async (req, res, next) => {
     try {
-        let answers = await dao.getAnswers(parseInt(req.query.lectureId), parseInt(req.query.questionId));
+        let answers = await dao.getAnswers(parseInt(req.query.subjectId), parseInt(req.query.lectureId), parseInt(req.query.questionId));
         res.status(200).send(answers.rows);
     } catch (e) {
         res.status(400).send(e.message)

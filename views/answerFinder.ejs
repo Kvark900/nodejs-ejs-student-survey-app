@@ -84,12 +84,17 @@
 
 
 		<script>
+				let nothingSelected = `<option value="">
+																Nothing selected
+															</option>
+														`;
         function reRenderLectures() {
             let subjectId = $("#subjectBox")[0].value;
             let url = `/api/lecture?subjectId=${subjectId}`;
             $.get(url).then((res) => {
                 let lectureBox = $("#lectureBox")[0];
                 lectureBox.innerHTML = "";
+                lectureBox.insertAdjacentHTML("beforeend", nothingSelected);
                 if (res.length === 0) {
                     let option =
                         `<option value="">
@@ -120,6 +125,7 @@
             $.get(url).then((res) => {
                 let questionBox = $("#questionBox")[0];
                 questionBox.innerHTML = "";
+                questionBox.insertAdjacentHTML("beforeend", nothingSelected);
                 if (res.length === 0) {
                     let option =
                         `<option value="">
@@ -141,10 +147,11 @@
         }
 
         function search() {
+            let subjectId = $("#subjectBox")[0].value;
             let lectureId = $("#lectureBox")[0].value;
             let questionId = $("#questionBox")[0].value;
 
-            let url = `/api/answer?lectureId=${lectureId}&questionId=${questionId}`;
+            let url = `/api/answer?subjectId=${subjectId}&lectureId=${lectureId}&questionId=${questionId}`;
             let table = $("#resultTable")[0];
             table.innerHTML = "";
             table.innerHTML = `<thead>
