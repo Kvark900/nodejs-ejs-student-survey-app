@@ -143,9 +143,9 @@ async function getQuestionsByLectureId(lecture_id) {
         let query = `SELECT q.*, t.name AS type, c.name AS category
                    FROM survey_copy.question q
                    JOIN survey_copy.question_category c
-                   ON q.category_id = c.id
+                        ON q.category_id = c.id
                    JOIN survey_copy.question_type t
-                   ON q.type_id = t.id
+                        ON q.type_id = t.id
                    WHERE lecture_id = $1;
                   `;
         let result = await dbConfig.pool.query(query, [isNaN(lecture_id) ? null : lecture_id]);
@@ -190,7 +190,7 @@ async function getLecturesBySubjectId(subjectId) {
                 SELECT l.*, s.name subject_name
                 FROM survey_copy.lecture l
                 JOIN survey_copy.subject s
-                ON l.subject_id = s.id
+                     ON l.subject_id = s.id
                 WHERE l.subject_id = $1;
         `;
         let result = await dbConfig.pool.query(query, [subjectId]);

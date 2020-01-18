@@ -15,53 +15,55 @@
 			<%- include partials/sidebar.ejs %>
 			<!-- End vertical navbar -->
 			<div id="profContent">
-				<h2>Answer Finder</h2>
-				<div class="form-group row">
-					<label for="subjectBox"
-					       class="col-sm-2 col-form-label">Subject
-					</label>
-					<div class="col-sm-10 d-flex">
-						<select required
-						        class="custom-select"
-						        onchange="reRenderLectures()"
-						        id="subjectBox">
-							<% for (let i = 0; i < subjects.length; i++){ %>
-								<option value="<%= subjects[i].id %>">
-									<%= subjects[i].name %>
-								</option>
-							<% } %>
-						</select>
+				<div id="answSearchPanel">
+					<h2>Answer Finder</h2>
+					<div class="form-group row">
+						<label for="subjectBox"
+						       class="col-sm-2 col-form-label">Subject
+						</label>
+						<div class="col-sm-10 d-flex">
+							<select required
+							        class="custom-select"
+							        onchange="reRenderLectures()"
+							        id="subjectBox">
+								<% for (let i = 0; i < subjects.length; i++){ %>
+									<option value="<%= subjects[i].id %>">
+										<%= subjects[i].name %>
+									</option>
+								<% } %>
+							</select>
+						</div>
 					</div>
-				</div>
-				<div class="form-group row">
-					<label for="lectureBox"
-					       class="col-sm-2 col-form-label">Lecture
-					</label>
-					<div class="col-sm-10 d-flex">
-						<select required
-						        class="custom-select"
-						        onchange="reRenderQuestions()"
-						        id="lectureBox">
-						</select>
+					<div class="form-group row">
+						<label for="lectureBox"
+						       class="col-sm-2 col-form-label">Lecture
+						</label>
+						<div class="col-sm-10 d-flex">
+							<select required
+							        class="custom-select"
+							        onchange="reRenderQuestions()"
+							        id="lectureBox">
+							</select>
+						</div>
 					</div>
-				</div>
-				<div class="form-group row">
-					<label for="questionBox"
-					       class="col-sm-2 col-form-label">Question
-					</label>
-					<div class="col-sm-10 d-flex">
-						<select required
-						        class="custom-select"
-						        id="questionBox">
-						</select>
+					<div class="form-group row">
+						<label for="questionBox"
+						       class="col-sm-2 col-form-label">Question
+						</label>
+						<div class="col-sm-10 d-flex">
+							<select required
+							        class="custom-select"
+							        id="questionBox">
+							</select>
+						</div>
 					</div>
-				</div>
-				<div class="form-group row d-flex flex-row-reverse">
-					<button type="button"
-					        id="searchBtn"
-					        onclick="search()"
-					        class="btn btn-primary">Search
-					</button>
+					<div class="form-group row d-flex flex-row-reverse">
+						<button type="button"
+						        id="searchBtn"
+						        onclick="search()"
+						        class="btn btn-primary">Search
+						</button>
+					</div>
 				</div>
 				<hr style="border: 1px solid rgba(0,0,0,.1);"/>
 				<div>
@@ -82,9 +84,8 @@
 			</div>
 		</div>
 
-
 		<script>
-				let nothingSelected = `<option value="">
+        let nothingSelected = `<option value="">
 																Nothing selected
 															</option>
 														`;
@@ -108,6 +109,7 @@
 
                 for (let i = 0; i < res.length; i++) {
                     let date = res[i].date_time;
+                    moment(res[i].date_time).format('DD.MM.YYYY h:mm:ss')
                     let option =
                         `<option value=${res[i].id}>
 														${res[i].subject_name} ${date}
@@ -170,7 +172,7 @@
                             `
 															<tr>
 																<td>
-																	${res[i].date_of_answer}
+																	${moment(res[i].date_of_answer).format('DD.MM.YYYY h:mm:ss')}
 																</td>
 																<td>
 																	${res[i].student}

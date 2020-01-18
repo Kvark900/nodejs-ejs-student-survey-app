@@ -18,8 +18,8 @@ body {
 }
 
 #profContent {
-    width: 40%;
-    padding-left: 20px;
+    width: 100%;
+    padding-left:    20px;
 }
 
 #alertsPanel {
@@ -93,4 +93,8 @@ body {
 
 a {
     color: #00B7FF;
+}
+
+#answSearchPanel {
+    width: 40%;
 }
