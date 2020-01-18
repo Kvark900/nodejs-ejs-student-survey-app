@@ -95,7 +95,6 @@
             $.get(url).then((res) => {
                 let lectureBox = $("#lectureBox")[0];
                 lectureBox.innerHTML = "";
-                lectureBox.insertAdjacentHTML("beforeend", nothingSelected);
                 if (res.length === 0) {
                     let option =
                         `<option value="">
@@ -106,6 +105,7 @@
                     reRenderQuestions();
                     return;
                 }
+                lectureBox.insertAdjacentHTML("beforeend", nothingSelected);
 
                 for (let i = 0; i < res.length; i++) {
                     let date = moment(res[i].date_time).format('DD.MM.YYYY h:mm:ss');
@@ -126,7 +126,6 @@
             $.get(url).then((res) => {
                 let questionBox = $("#questionBox")[0];
                 questionBox.innerHTML = "";
-                questionBox.insertAdjacentHTML("beforeend", nothingSelected);
                 if (res.length === 0) {
                     let option =
                         `<option value="">
@@ -136,6 +135,7 @@
                     questionBox.insertAdjacentHTML("beforeend", option);
                     return;
                 }
+                questionBox.insertAdjacentHTML("beforeend", nothingSelected);
                 for (let i = 0; i < res.length; i++) {
                     let option =
                         `<option value=${res[i].id}>
