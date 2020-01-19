@@ -84,10 +84,8 @@
 			</div>
 		</div>
 
-
 		<!-- Modal -->
-		<% include partials/startQuestionModal.ejs%>
-
+		<% include partials/startQuestionModal.ejs %>
 
 		<script>
         function reRenderLectures() {
@@ -162,7 +160,9 @@
 									</td>
 									<td style="padding-left: 20px">
 											<input type="image" src="https://img.icons8.com/ios-glyphs/30/000000/start.png"
-															data-toggle="modal" data-target="#exampleModal"/>
+															data-toggle="modal"
+															onclick="showModal('${res[i].question}')"
+															data-target="#exampleModal"/>
 									</td>
 							  	</tr>
 		                        `
@@ -195,7 +195,13 @@
             });
 
         }
+
+        function showModal(text) {
+            $("#questionText")[0].value = "" + text;
+        }
+
 		</script>
+
 		<% include partials/scripts.ejs %>
 		<script>
         document.onload = reRenderLectures();
