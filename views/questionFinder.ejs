@@ -15,7 +15,8 @@
 			<%- include partials/sidebar.ejs %>
 			<!-- End vertical navbar -->
 			<div id="profContent">
-				<div id="questionSearchPanelMain" style="display:flex;">
+				<div id="questionSearchPanelMain"
+				     style="display:flex;">
 					<div id="questionSearchPanel">
 						<h2>Question Finder</h2>
 						<div class="form-group row">
@@ -84,6 +85,10 @@
 		</div>
 
 
+		<!-- Modal -->
+		<% include partials/startQuestionModal.ejs%>
+
+
 		<script>
         function reRenderLectures() {
             let subjectId = $("#subjectBox")[0].value;
@@ -108,7 +113,7 @@
         }
 
         function goToUpdate(id) {
-            window.location.replace("http://localhost:3000/updateQuestion/" + id);
+            window.location.replace("http://localhost:3000/teacher/updateQuestion/" + id);
         }
 
         function search() {
@@ -142,7 +147,7 @@
 									</td>
 									<td style="padding-left: 20px">
 											<div>
-											  <input onchange="changeActiveState(this)" type="checkbox"  id="activeQuestion${i}">
+											  <input onchange="changeActiveState(this)" type="checkbox" disabled id="activeQuestion${i}">
 											</div>
 									</td>
 									<td>
@@ -154,6 +159,10 @@
 											<img  style="height: 20px"
 														onclick="goToUpdate(${res[i].id})"
 													  src="https://img.icons8.com/ios-filled/50/000000/ball-point-pen.png">
+									</td>
+									<td style="padding-left: 20px">
+											<input type="image" src="https://img.icons8.com/ios-glyphs/30/000000/start.png"
+															data-toggle="modal" data-target="#exampleModal"/>
 									</td>
 							  	</tr>
 		                        `
