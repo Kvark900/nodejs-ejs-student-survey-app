@@ -11,6 +11,7 @@ const studentRouter = require('./routes/view/student');
 const apiRouter = require('./routes/rest/api');
 const questionRouter = require('./routes/rest/question');
 const lectureRouter = require('./routes/rest/lecture');
+const answerRouter = require('./routes/rest/answer');
 
 
 const moment = require("moment");
@@ -35,6 +36,7 @@ server.use('/users', studentRouter);
 server.use('/api', apiRouter);
 server.use('/api/question', questionRouter);
 server.use('/api/lecture', lectureRouter);
+server.use('/api/answer', answerRouter);
 
 // catch 404 and forward to error handler
 server.use(function (req, res, next) {
