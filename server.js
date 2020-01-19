@@ -4,8 +4,15 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+
+
+const teacherRouter = require('./routes/view/teacher');
+const studentRouter = require('./routes/view/student');
+const apiRouter = require('./routes/rest/api');
+const questionRouter = require('./routes/rest/question');
+const lectureRouter = require('./routes/rest/lecture');
+
+
 const moment = require("moment");
 
 const server = express();
@@ -22,8 +29,12 @@ server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true}));
 server.use(express.static(path.join(__dirname, 'public')));
 
-server.use('/', indexRouter);
-server.use('/users', usersRouter);
+server.use('/teacher', teacherRouter);
+server.use('/users', studentRouter);
+
+server.use('/api', apiRouter);
+server.use('/api/question', questionRouter);
+server.use('/api/lecture', lectureRouter);
 
 // catch 404 and forward to error handler
 server.use(function (req, res, next) {

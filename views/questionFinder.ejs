@@ -15,50 +15,54 @@
 			<%- include partials/sidebar.ejs %>
 			<!-- End vertical navbar -->
 			<div id="profContent">
-				<h2>Question Finder</h2>
-				<div class="form-group row">
-					<label for="subjectBox"
-					       class="col-sm-2 col-form-label">Subject
-					</label>
-					<div class="col-sm-10 d-flex">
-						<select required
-						        class="custom-select"
-						        onchange="reRenderLectures()"
-						        id="subjectBox">
-							<% for (let i = 0; i < subjects.length; i++){ %>
-								<option value="<%= subjects[i].id %>">
-									<%= subjects[i].name %>
-								</option>
-							<% } %>
-						</select>
+				<div id="questionSearchPanelMain" style="display:flex;">
+					<div id="questionSearchPanel">
+						<h2>Question Finder</h2>
+						<div class="form-group row">
+							<label for="subjectBox"
+							       class="col-sm-2 col-form-label">Subject
+							</label>
+							<div class="col-sm-10 d-flex">
+								<select required
+								        class="custom-select"
+								        onchange="reRenderLectures()"
+								        id="subjectBox">
+									<% for (let i = 0; i < subjects.length; i++){ %>
+										<option value="<%= subjects[i].id %>">
+											<%= subjects[i].name %>
+										</option>
+									<% } %>
+								</select>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="lectureBox"
+							       class="col-sm-2 col-form-label">Lecture
+							</label>
+							<div class="col-sm-10 d-flex">
+								<select required
+								        class="custom-select"
+								        id="lectureBox">
+									<option value="">
+										Choose subject first!
+									</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group row d-flex flex-row-reverse">
+							<button type="button"
+							        id="searchBtn"
+							        onclick="search()"
+							        class="btn btn-primary">Search
+							</button>
+							<button type="button"
+							        id="addNewBtn"
+							        style="margin-right: 20px"
+							        onclick="goToAdd()"
+							        class="btn btn-primary">New Question
+							</button>
+						</div>
 					</div>
-				</div>
-				<div class="form-group row">
-					<label for="lectureBox"
-					       class="col-sm-2 col-form-label">Lecture
-					</label>
-					<div class="col-sm-10 d-flex">
-						<select required
-						        class="custom-select"
-						        id="lectureBox">
-							<option value="">
-								Choose subject first!
-							</option>
-						</select>
-					</div>
-				</div>
-				<div class="form-group row d-flex flex-row-reverse">
-					<button type="button"
-					        id="searchBtn"
-					        onclick="search()"
-					        class="btn btn-primary">Search
-					</button>
-					<button type="button"
-					        id="addNewBtn"
-					        style="margin-right: 20px"
-					        onclick="goToAdd()"
-					        class="btn btn-primary">New Question
-					</button>
 				</div>
 				<hr style="border: 1px solid rgba(0,0,0,.1);"/>
 				<div>
@@ -100,7 +104,7 @@
         }
 
         function goToAdd() {
-            window.location.replace("http://localhost:3000/addQuestion");
+            window.location.replace("http://localhost:3000/teacher/addQuestion");
         }
 
         function goToUpdate(id) {
@@ -142,9 +146,9 @@
 											</div>
 									</td>
 									<td>
-										<img   style="height: 20px"
+										<img style="height: 20px"
 											   onclick="deleteQuestion(${res[i].id}, this.parentElement.parentElement.rowIndex)"
-					  						   src="https://img.icons8.com/material-sharp/24/000000/filled-trash.png"/>
+					  						 src="https://img.icons8.com/material-sharp/24/000000/filled-trash.png"/>
 									</td>
 									<td style="padding-left: 20px">
 											<img  style="height: 20px"
