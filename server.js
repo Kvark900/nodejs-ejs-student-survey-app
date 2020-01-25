@@ -31,7 +31,7 @@ server.use(bodyParser.urlencoded({ extended: true}));
 server.use(express.static(path.join(__dirname, 'public')));
 
 server.use('/teacher', teacherRouter);
-server.use('/users', studentRouter);
+server.use('/student', studentRouter);
 
 server.use('/api', apiRouter);
 server.use('/api/question', questionRouter);

@@ -109,3 +109,12 @@ a {
     width: 65%;
 }
 
+.student-nav-item{
+    font-size: 3vw;
+    padding: 8px 35px !important;
+}
+
+#studentAnswersPanel {
+    padding-top: 40px;
+
+}

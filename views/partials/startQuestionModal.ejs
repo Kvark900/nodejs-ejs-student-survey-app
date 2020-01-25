@@ -55,6 +55,24 @@
 <script type="text/javascript"
         src="/js/bootstrap-input-spinner.js"></script>
 <script type="text/javascript">
+/*
+		function activateQuestion() {
+        axios.post('/api/question/xls', data)
+            .then(response => {
+                console.log(response);
+                let successPanel = $("#successPanel")[0];
+                successPanel.innerHTML = "<span><strong>Success!</strong> Import successful!</span>"
+                successPanel.style = "display: flex";
+                $("#successPanel").delay(2000).fadeOut(1000);
+                $("#XLSQFile")[0].value = "";
+            })
+            .catch(response => {
+                console.log(response);
+            });
+
+    }
+*/
+
 		function load () {
         $("input[type='number']").InputSpinner();
 		}

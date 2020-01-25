@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<% include partials/head.ejs %>
+		<% include ../partials/head.ejs %>
 	</head>
 	<body>
 
 		<header>
-			<% include partials/header.ejs %>
+			<% include ../partials/header.ejs %>
 		</header>
 
 
 		<div id="content">
 			<!-- Vertical navbar -->
-			<%- include partials/sidebar.ejs %>
+			<%- include ../partials/sidebar.ejs %>
 			<!-- End vertical navbar -->
 			<div id="profContent">
 
@@ -22,7 +22,7 @@
 		</div>
 
 
-		<script>
+		<!--<script>
         function addSurvey() {
             let year = $("#yearBox")[0].value;
             if (isNaN(year)) {
@@ -68,7 +68,7 @@
         }
 
         //# sourceURL=addSurvey.js
-		</script>
-		<% include partials/scripts.ejs %>
+		</script>-->
+		<% include ../partials/scripts.ejs %>
 	</body>
 </html>

@@ -271,6 +271,25 @@ async function batchInsert(questions) {
     }
 }
 
+async function activateQuestion(id) {
+    let result = await dbConfig.pool.query(
+        "U * from survey_copy.question WHERE id = $1;", [id]);
+    console.info(new Date() + ": Getting question success");
+    return result;
+}
+
+async function getStudentsAnswers(studentId) {
+    let query = `SELECT q.question, qa.*
+                  FROM survey_copy.question_answer qa
+                  JOIN survey_copy.question q
+                       ON qa.question_id = q.id
+                  WHERE qa.student_id = $1;`;
+
+    let result = await dbConfig.pool.query(query, [studentId]);
+    console.info(new Date() + ": Getting student's answers success");
+    return result;
+}
+
 
 module.exports = {
     getSubjects,
@@ -292,5 +311,7 @@ module.exports = {
     postQuestionOptions,
     postLecture,
     updateQuestion,
-    batchInsert
+    batchInsert,
+    activateQuestion,
+    getStudentsAnswers
 };

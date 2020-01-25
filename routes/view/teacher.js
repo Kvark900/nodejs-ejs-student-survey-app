@@ -10,20 +10,20 @@ const fs = require('fs');
 router.get('/', async (req, res, next) => {
     let subjects = await dao.getSubjects();
     let surveys = await dao.getSurveysWithSubjectNames();
-    res.render('index', {title: 'Express', subjects: subjects.rows, surveys: surveys.rows});
+    res.render('teacher/teacher', {title: 'Express', subjects: subjects.rows, surveys: surveys.rows});
 });
 
 router.get('/lecture', async (req, res, next) => {
     let subjects = await dao.getSubjects();
     let lectures = await dao.getLecturesWithSubjectNames();
-    res.render('lecture', {moment: moment, title: 'Express', subjects: subjects.rows, lectures: lectures.rows});
+    res.render('teacher/lecture', {moment: moment, title: 'Express', subjects: subjects.rows, lectures: lectures.rows});
 });
 
 router.get('/addQuestion', async (req, res, next) => {
     let lectures = await dao.getLecturesWithSubjectNames();
     let types = await dao.getQuestionTypes();
     let categories = await dao.getQuestionCategories();
-    res.render('addQuestion',
+    res.render('teacher/addQuestion',
         {
             title: 'Question',
             moment: moment,
@@ -39,7 +39,7 @@ router.get('/updateQuestion/:id', async (req, res, next) => {
     let types = await dao.getQuestionTypes();
     let categories = await dao.getQuestionCategories();
     let current = await dao.getQuestion(req.params.id);
-    res.render('addQuestion',
+    res.render('teacher/addQuestion',
         {
             title: 'Question',
             moment: moment,
@@ -52,7 +52,7 @@ router.get('/updateQuestion/:id', async (req, res, next) => {
 
 router.get('/question', async (req, res, next) => {
     let subjects = await dao.getSubjectsByProfessorId(2); // TODO: get currently logged in professor's id
-    res.render('questionFinder',
+    res.render('teacher/questionFinder',
         {
             title: 'Question',
             moment: moment,
@@ -62,7 +62,7 @@ router.get('/question', async (req, res, next) => {
 
 router.get('/answers', async (req, res, next) => {
     let subjects = await dao.getSubjectsByProfessorId(2); // TODO: get currently logged in professor's id
-    res.render('answerFinder',
+    res.render('teacher/answerFinder',
         {
             title: 'Answer',
             moment: moment,

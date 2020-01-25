@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<% include partials/head.ejs %>
+		<% include ../partials/head.ejs %>
 	</head>
 	<body>
 
 		<header>
-			<% include partials/header.ejs %>
+			<% include ../partials/header.ejs %>
 		</header>
 
 
 		<div id="content">
 			<!-- Vertical navbar -->
-			<%- include partials/sidebar.ejs %>
+			<%- include ../partials/sidebar.ejs %>
 			<!-- End vertical navbar -->
 			<div id="profContent">
 				<div id="addQuestionPanel">
@@ -329,7 +329,7 @@
 
         //# sourceURL= question.js
 		</script>
-		<% include partials/scripts.ejs %>
+		<% include ../partials/scripts.ejs %>
 		<script>
         function initValues() {
 					<% if(locals.current) { %>

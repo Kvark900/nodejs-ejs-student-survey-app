@@ -96,11 +96,21 @@ router.put("/:id", (async (req, res) => {
     }
 }));
 
+router.post("/activate/:id", async (req, res) => {
+    try {
+        await dao.activateQuestion(req.params.id);
+        res.sendStatus(200);
+    } catch (e) {
+        res.status(400).send(e.message)
+    }
+});
+
 function deleteFile(filePath) {
     fs.unlink(filePath, (err) => {
         if (err) throw err;
         console.log(`${path} deleted'`);
     });
 }
+
 
 module.exports = router;

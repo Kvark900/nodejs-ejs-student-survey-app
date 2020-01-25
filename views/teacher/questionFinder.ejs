@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<% include partials/head.ejs %>
+		<% include ../partials/head.ejs %>
 	</head>
 	<body>
 
 		<header>
-			<% include partials/header.ejs %>
+			<% include ../partials/header.ejs %>
 		</header>
 
 
 		<div id="content">
 			<!-- Vertical navbar -->
-			<%- include partials/sidebar.ejs %>
+			<%- include ../partials/sidebar.ejs %>
 			<!-- End vertical navbar -->
 			<div id="profContent">
 				<div id="questionSearchPanelMain"
@@ -85,9 +85,11 @@
 		</div>
 
 		<!-- Modal -->
-		<% include partials/startQuestionModal.ejs %>
+		<% include ../partials/startQuestionModal.ejs %>
 
 		<script>
+				let questionToActivate;
+
         function reRenderLectures() {
             let subjectId = $("#subjectBox")[0].value;
             let url = `/api/lecture?subjectId=${subjectId}`;
@@ -161,7 +163,7 @@
 									<td style="padding-left: 20px">
 											<input type="image" src="https://img.icons8.com/ios-glyphs/30/000000/start.png"
 															data-toggle="modal"
-															onclick="showModal('${res[i].question}')"
+															onclick="showModal(${res[i]})"
 															data-target="#exampleModal"/>
 									</td>
 							  	</tr>
@@ -196,13 +198,14 @@
 
         }
 
-        function showModal(text) {
-            $("#questionText")[0].value = "" + text;
+        function showModal(question) {
+            questionToActivate = question;
+            $("#questionText")[0].value = "" + question.question;
         }
 
 		</script>
 
-		<% include partials/scripts.ejs %>
+		<% include ../partials/scripts.ejs %>
 		<script>
         document.onload = reRenderLectures();
 		</script>

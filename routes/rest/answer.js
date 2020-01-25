@@ -11,4 +11,15 @@ router.get('/', async (req, res, next) => {
     }
 });
 
+
+router.get('/student/:id', async (req, res, next) => {
+    try {
+        let answers = await dao.getStudentsAnswers(parseInt(req.params.id));
+        res.status(200).send(answers.rows);
+    } catch (e) {
+        res.status(400).send(e.message)
+    }
+});
+
+
 module.exports = router;
