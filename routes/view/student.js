@@ -5,7 +5,7 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
-    res.render('student/student', {title: "Student"});
+    res.redirect("/student/answers");
 });
 
 router.get('/answers', async (req, res, next) => {
