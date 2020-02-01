@@ -65,7 +65,8 @@
 						</div>
 					</div>
 					<div id="timerDiv">
-						<h4 style="padding-left: 50px" id="timeHeader"></h4>
+						<h4 style="padding-left: 50px"
+						    id="timeHeader"></h4>
 					</div>
 				</div>
 				<hr style="border: 1px solid rgba(0,0,0,.1);"/>
@@ -150,7 +151,7 @@
 									</td>
 									<td style="padding-left: 20px">
 											<div>
-											  <input onchange="changeActiveState(this)" type="checkbox" disabled id="activeQuestion${i}">
+											  <input type="checkbox" disabled id="activeQuestion${i}">
 											</div>
 									</td>
 									<td>
@@ -166,12 +167,14 @@
 									<td style="padding-left: 20px">
 											<input type="image" src="https://img.icons8.com/ios-glyphs/30/000000/start.png"
 															data-toggle="modal"
-															onclick="showModal(${res[i].id}, '${res[i].question}')"
+															class="modal-btn"
+															onclick="showModal(${res[i].id}, '${res[i].question}', ${i})"
 															data-target="#exampleModal"/>
 									</td>
 							  	</tr>
 		                        `
                 table.insertAdjacentHTML("beforeend", question);
+                $('#activeQuestion' + i).prop('checked', res[i].active);
               }
             }
         );
@@ -201,8 +204,8 @@
 
       }
 
-      function showModal(id, text) {
-        questionToActivate = {id: id, text: text};
+      function showModal(id, text, index) {
+        questionToActivate = {id: id, text: text, index: index};
         $("#questionText")[0].value = "" + text;
       }
 
