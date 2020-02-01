@@ -64,6 +64,9 @@
 							</button>
 						</div>
 					</div>
+					<div id="timerDiv">
+						<h4 style="padding-left: 50px" id="timeHeader"></h4>
+					</div>
 				</div>
 				<hr style="border: 1px solid rgba(0,0,0,.1);"/>
 				<div>
@@ -88,40 +91,40 @@
 		<% include ../partials/startQuestionModal.ejs %>
 
 		<script>
-				let questionToActivate;
+      let questionToActivate;
 
-        function reRenderLectures() {
-            let subjectId = $("#subjectBox")[0].value;
-            let url = `/api/lecture?subjectId=${subjectId}`;
-            $.get(url).then((res) => {
-                let lectureBox = $("#lectureBox")[0];
-                lectureBox.innerHTML = "";
-                for (let i = 0; i < res.length; i++) {
-                    let date = res[i].date_time;
-                    let option =
-                        `<option value=${res[i].id}>
+      function reRenderLectures() {
+        let subjectId = $("#subjectBox")[0].value;
+        let url = `/api/lecture?subjectId=${subjectId}`;
+        $.get(url).then((res) => {
+          let lectureBox = $("#lectureBox")[0];
+          lectureBox.innerHTML = "";
+          for (let i = 0; i < res.length; i++) {
+            let date = res[i].date_time;
+            let option =
+                `<option value=${res[i].id}>
 														${res[i].subject_name} ${date}
 													</option>
 		                    `;
-                    lectureBox.insertAdjacentHTML("beforeend", option);
-                }
-            });
-        }
+            lectureBox.insertAdjacentHTML("beforeend", option);
+          }
+        });
+      }
 
-        function goToAdd() {
-            window.location.replace("http://localhost:3000/teacher/addQuestion");
-        }
+      function goToAdd() {
+        window.location.replace("http://localhost:3000/teacher/addQuestion");
+      }
 
-        function goToUpdate(id) {
-            window.location.replace("http://localhost:3000/teacher/updateQuestion/" + id);
-        }
+      function goToUpdate(id) {
+        window.location.replace("http://localhost:3000/teacher/updateQuestion/" + id);
+      }
 
-        function search() {
-            let lectureId = $("#lectureBox")[0].value;
-            let url = `/api/question?lectureId=${lectureId}`;
-            let table = $("#resultTable")[0];
-            table.innerHTML = "";
-            table.innerHTML = `<thead>
+      function search() {
+        let lectureId = $("#lectureBox")[0].value;
+        let url = `/api/question?lectureId=${lectureId}`;
+        let table = $("#resultTable")[0];
+        table.innerHTML = "";
+        table.innerHTML = `<thead>
 																<tr>
 																 <th>Question</th>
 																 <th>Type</th>
@@ -130,11 +133,11 @@
 																</tr>
 															<thead>`;
 
-            $.get(url).then((res) => {
-                    console.log(res);
-                    for (let i = 0; i < res.length; i++) {
-                        let question =
-                            `
+        $.get(url).then((res) => {
+              console.log(res);
+              for (let i = 0; i < res.length; i++) {
+                let question =
+                    `
 								<tr>
 									<td>
 										${res[i].question}
@@ -163,51 +166,51 @@
 									<td style="padding-left: 20px">
 											<input type="image" src="https://img.icons8.com/ios-glyphs/30/000000/start.png"
 															data-toggle="modal"
-															onclick="showModal(${res[i]})"
+															onclick="showModal(${res[i].id}, '${res[i].question}')"
 															data-target="#exampleModal"/>
 									</td>
 							  	</tr>
 		                        `
-                        table.insertAdjacentHTML("beforeend", question);
-                    }
-                }
-            );
-        }
-
-        function changeActiveState(box) {
-            let boxes = $("input[type~='checkbox']");
-            if (!box.checked) return;
-            for (let i = 0; i < boxes.length; i++) {
-                if (boxes[i].id !== box.id)
-                    boxes[i].checked = false;
+                table.insertAdjacentHTML("beforeend", question);
+              }
             }
-        }
+        );
+      }
 
-        function deleteQuestion(id, index) {
-            $.ajax({
-                url: "/api/question/" + id,
-                type: 'DELETE',
-                error: (xhr, error) => {
-                    console.error("Error in ajax req: " + error);
-                },
-                success: () => {
-                    console.info("Delete success");
-                    $("#resultTable")[0].deleteRow(index);
-                }
-            });
-
+      function changeActiveState(box) {
+        let boxes = $("input[type~='checkbox']");
+        if (!box.checked) return;
+        for (let i = 0; i < boxes.length; i++) {
+          if (boxes[i].id !== box.id)
+            boxes[i].checked = false;
         }
+      }
 
-        function showModal(question) {
-            questionToActivate = question;
-            $("#questionText")[0].value = "" + question.question;
-        }
+      function deleteQuestion(id, index) {
+        $.ajax({
+          url: "/api/question/" + id,
+          type: 'DELETE',
+          error: (xhr, error) => {
+            console.error("Error in ajax req: " + error);
+          },
+          success: () => {
+            console.info("Delete success");
+            $("#resultTable")[0].deleteRow(index);
+          }
+        });
+
+      }
+
+      function showModal(id, text) {
+        questionToActivate = {id: id, text: text};
+        $("#questionText")[0].value = "" + text;
+      }
 
 		</script>
 
 		<% include ../partials/scripts.ejs %>
 		<script>
-        document.onload = reRenderLectures();
+      document.onload = reRenderLectures();
 		</script>
 	</body>
 </html>

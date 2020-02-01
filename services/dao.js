@@ -230,7 +230,7 @@ async function postQuestionOptions(id, options) {
     try {
         for (let i = 0; i < options.length; i++) {
             await dbConfig.pool.query(
-                "INSERT INTO survey_copy.multiple_choices(question_id, answer) VALUES ($1, $2);",
+                 "INSERT INTO survey_copy.multiple_choices(question_id, answer) VALUES ($1, $2);",
                 [id, options[i]]
             );
         }
@@ -271,10 +271,10 @@ async function batchInsert(questions) {
     }
 }
 
-async function activateQuestion(id) {
-    let result = await dbConfig.pool.query(
-        "U * from survey_copy.question WHERE id = $1;", [id]);
-    console.info(new Date() + ": Getting question success");
+async function changeQuestionsActiveState(active, id) {
+    let query = "UPDATE survey_copy.question SET active = $1 WHERE id = $2";
+    let result = await dbConfig.pool.query(query, [active, id]);
+    console.info(new Date() + ": Active state changed");
     return result;
 }
 
@@ -293,9 +293,6 @@ async function getStudentsAnswers(studentId) {
 
 module.exports = {
     getSubjects,
-    postSurvey,
-    getSurveys,
-    getQuestions,
     getQuestionCategories,
     getQuestionTypes,
     getQuestionsByLectureId,
@@ -312,6 +309,6 @@ module.exports = {
     postLecture,
     updateQuestion,
     batchInsert,
-    activateQuestion,
+    changeQuestionsActiveState,
     getStudentsAnswers
 };

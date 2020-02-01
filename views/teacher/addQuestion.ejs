@@ -183,25 +183,25 @@
 
 
 		<script>
-        function goBack() {
-            window.location.replace("http://localhost:3000/teacher/question");
-        }
+      function goBack() {
+        window.location.replace("http://localhost:3000/teacher/question");
+      }
 
-        function renderMultipleChoices() {
-            let isMultiple = $("#questionTypeBox")[0].value == 2 || $("#questionTypeBox")[0].value == 3;
-            let options = $("textarea[id*='option']");
-            $("#addOptionBtn")[0].disabled = !isMultiple;
-            for (let i = 0; i < options.length; i++) {
-                options[i].disabled = !isMultiple;
-                if (!isMultiple)
-                    options[i].classList.remove("is-invalid");
-            }
+      function renderMultipleChoices() {
+        let isMultiple = $("#questionTypeBox")[0].value == 2 || $("#questionTypeBox")[0].value == 3;
+        let options = $("textarea[id*='option']");
+        $("#addOptionBtn")[0].disabled = !isMultiple;
+        for (let i = 0; i < options.length; i++) {
+          options[i].disabled = !isMultiple;
+          if (!isMultiple)
+            options[i].classList.remove("is-invalid");
         }
+      }
 
-        function renderNewOptionBox() {
-            let panel = $("#multipleChoicesPanel")[0];
-            let x = panel.children.length + 1;
-            let newOption = `<div id="optionRow${x}"
+      function renderNewOptionBox() {
+        let panel = $("#multipleChoicesPanel")[0];
+        let x = panel.children.length + 1;
+        let newOption = `<div id="optionRow${x}"
 																	class="form-group row">
 																<label for="multipleChoiceBox"
 																       class="col-sm-2 col-form-label">
@@ -218,129 +218,130 @@
 									                      src="https://img.icons8.com/carbon-copy/100/000000/delete-forever--v1.png"/>
 																</div>
 														</div>`
-            panel.insertAdjacentHTML("beforeend", newOption);
-        }
+        panel.insertAdjacentHTML("beforeend", newOption);
+      }
 
-        function removeOption(id) {
-            $("#optionRow" + id)[0].remove()
-        }
+      function removeOption(id) {
+        $("#optionRow" + id)[0].remove()
+      }
 
-        function postQuestion() {
-            let question = createQuestion();
-            if (question === false) return;
-            let url = "/api/question";
-            let type = "POST";
-					<% if(locals.current) { %>
-            question.id = <%= current.id; %>;
-            url = "/api/question/" + <%= current.id; %>;
-            type = "PUT";
+      function postQuestion() {
+        let question = createQuestion();
+        if (question === false) return;
+        let url = "/api/question";
+        let type = "POST";
+				<% if(locals.current) { %>
+        question.id = <%= current.id; %>;
+        url = "/api/question/" + <%= current.id; %>;
+        type = "PUT";
+				<% } %>
+        console.log("JSON question is ")
+        console.log(question)
+        // Send a POST request
+        axios({
+          method: type,
+          url: url,
+          data: question
+        }).then(function (response) {
+          console.log("Question post success");
+          $("#successPanel")[0].style = "display: flex"
+          $("#successPanel").delay(2000).fadeOut(1000);
+					<% if(!locals.current) { %>
+          resetFields();
 					<% } %>
-            console.log("JSON question is ")
-            console.log(question)
-            $.ajax({
-                url: url,
-                type: type,
-                data: question,
-                error: (xhr, error) => {
-                    console.error("Error in ajax req: " + error);
-                },
-                success: () => {
-                    console.log("Question post success");
-                    $("#successPanel")[0].style = "display: flex"
-                    $("#successPanel").delay(2000).fadeOut(1000);
-									<% if(!locals.current) { %>
-                    resetFields();
-									<% } %>
-                }
+        })
+            .catch(function (error) {
+              console.error("Error in ajax req: " + error);
             });
+
+      }
+
+      function createQuestion() {
+        let validForm = true;
+
+        let question = {
+          lecture_id: "",
+          type_id: "",
+          category_id: "",
+          text: "",
+          options: []
+        };
+
+        let formFields = $("#addQuestionForm select, input, textarea");
+
+        for (let i = 0; i < formFields.length; i++) {
+          validateField(formFields[i]);
+          if (formFields[i].disabled) continue;
+          if (formFields[i].id === "questionText")
+            question.text = formFields[i].value;
+          else if (formFields[i].id === "lectureBox")
+            question.lecture_id = parseInt(formFields[i].value);
+          else if (formFields[i].id === "questionCategoryBox")
+            question.category_id = parseInt(formFields[i].value);
+          else if (formFields[i].id === "questionTypeBox")
+            question.type_id = parseInt(formFields[i].value);
+          else if (formFields[i].id.includes("option"))
+            question.options.push(formFields[i].value)
+        }
+        if (!validForm) {
+          $("#invalidFormMsg")[0].style = "display:block; color: red; padding-bottom:20px";
+          return false;
+        } else {
+          $("#invalidFormMsg")[0].style = "display:none;"
         }
 
-        function createQuestion() {
-            let validForm = true;
+        console.log(question);
 
-            let question = {
-                lecture_id: "",
-                type_id: "",
-                category_id: "",
-                text: "",
-                options: []
-            };
-
-            let formFields = $("#addQuestionForm select, input, textarea");
-
-            for (let i = 0; i < formFields.length; i++) {
-                validateField(formFields[i]);
-                if (formFields[i].disabled) continue;
-                if (formFields[i].id === "questionText")
-                    question.text = formFields[i].value;
-                else if (formFields[i].id === "lectureBox")
-                    question.lecture_id = parseInt(formFields[i].value);
-                else if (formFields[i].id === "questionCategoryBox")
-                    question.category_id = parseInt(formFields[i].value);
-                else if (formFields[i].id === "questionTypeBox")
-                    question.type_id = parseInt(formFields[i].value);
-                else if (formFields[i].id.includes("option"))
-                    question.options.push(formFields[i].value)
-            }
-            if (!validForm) {
-                $("#invalidFormMsg")[0].style = "display:block; color: red; padding-bottom:20px";
-                return false;
-            } else {
-                $("#invalidFormMsg")[0].style = "display:none;"
-            }
-
-            console.log(question);
-
-            function validateField(field) {
-                if (!field.disabled && field.required && field.value === "") {
-                    field.classList.add("is-invalid");
-                    validForm = false;
-                } else field.classList.remove("is-invalid");
-            }
-
-            return question;
+        function validateField(field) {
+          if (!field.disabled && field.required && field.value === "") {
+            field.classList.add("is-invalid");
+            validForm = false;
+          } else field.classList.remove("is-invalid");
         }
 
-        function resetFields() {
-            let formFields = $("#addQuestionForm select, input, textarea");
-            for (let i = 0; i < formFields.length; i++) {
-                if (formFields[i].disabled) continue;
-                formFields[i].value = "";
-            }
-        }
+        return question;
+      }
 
-        function importExcel() {
-            let file = $("#XLSQFile")[0].files[0];
-            let data = new FormData();
-            data.append("excel", file);
-            axios.post('/api/question/xls', data)
-                .then(response => {
-                    console.log(response);
-                    let successPanel = $("#successPanel")[0];
-                    successPanel.innerHTML = "<span><strong>Success!</strong> Import successful!</span>"
-                    successPanel.style = "display: flex";
-                    $("#successPanel").delay(2000).fadeOut(1000);
-                    $("#XLSQFile")[0].value = "";
-                })
-                .catch(response => {
-                    console.log(response);
-                });
+      function resetFields() {
+        let formFields = $("#addQuestionForm select, input, textarea");
+        for (let i = 0; i < formFields.length; i++) {
+          if (formFields[i].disabled) continue;
+          formFields[i].value = "";
         }
+      }
 
-        //# sourceURL= question.js
+      function importExcel() {
+        let file = $("#XLSQFile")[0].files[0];
+        let data = new FormData();
+        data.append("excel", file);
+        axios.post('/api/question/xls', data)
+            .then(response => {
+              console.log(response);
+              let successPanel = $("#successPanel")[0];
+              successPanel.innerHTML = "<span><strong>Success!</strong> Import successful!</span>"
+              successPanel.style = "display: flex";
+              $("#successPanel").delay(2000).fadeOut(1000);
+              $("#XLSQFile")[0].value = "";
+            })
+            .catch(response => {
+              console.log(response);
+            });
+      }
+
+      //# sourceURL= question.js
 		</script>
 		<% include ../partials/scripts.ejs %>
 		<script>
-        function initValues() {
-					<% if(locals.current) { %>
-            $("#lectureBox")[0].value = <%= current.lecture_id %>;
-            $("#questionTypeBox")[0].value = <%= current.type_id %>;
-            $("#questionCategoryBox")[0].value = <%= current.category_id %>;
-            $("#questionText")[0].value = "<%= current.question %>";
-					<% } %>
-        }
+      function initValues() {
+				<% if(locals.current) { %>
+        $("#lectureBox")[0].value = <%= current.lecture_id %>;
+        $("#questionTypeBox")[0].value = <%= current.type_id %>;
+        $("#questionCategoryBox")[0].value = <%= current.category_id %>;
+        $("#questionText")[0].value = "<%= current.question %>";
+				<% } %>
+      }
 
-        document.onload = initValues();
+      document.onload = initValues();
 		</script>
 	</body>
 </html>
