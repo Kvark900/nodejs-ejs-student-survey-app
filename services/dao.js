@@ -292,6 +292,11 @@ async function getStudentsAnswers(studentId) {
   return result;
 }
 
+async function getAnswersByQuestionId(questionId) {
+  let query = "SELECT qa.* from question_answer qa where qa.id = $1";
+  return await dbConfig.pool.query(query, [questionId]);
+}
+
 async function getActiveQuestionsForStudent(studentId) {
   let query = `SELECT q.id,
                         q.question,
@@ -403,5 +408,6 @@ module.exports = {
   getStudentsQuestions,
   getStudentsSubjects,
   postStudentQuestion,
-  likeQuestion
+  likeQuestion,
+  getAnswersByQuestionId
 };

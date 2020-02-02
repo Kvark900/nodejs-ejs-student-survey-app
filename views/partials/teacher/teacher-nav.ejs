@@ -2,12 +2,12 @@
     class="nav nav-tabs">
 	<li class="nav-item">
 		<a class="nav-link  student-nav-item"
-		   href="/student/answers">Answers
+		   href="/teacher/answers">Answers
 		</a>
 	</li>
 	<li class="nav-item">
 		<a class="nav-link student-nav-item"
-		   href="/student/questions">Questions
+		   href="/teacher/question">Questions
 		</a>
 	</li>
 	<li class="nav-item">
@@ -24,7 +24,7 @@
     let href = window.location.href;
     if (href.includes("answer"))
       $(".student-nav-item").eq(0).addClass("active");
-		else if (href.includes("question"))
+		else if (href.includes("question") || href.includes("Question"))
       $(".student-nav-item").eq(1).addClass("active");
 		else if(href.includes("results"))
       $(".student-nav-item").eq(1).addClass("active");

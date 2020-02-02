@@ -18,6 +18,8 @@
 				</button>
 			</div>
 			<div class="modal-body">
+				<span id="invalidFormMsg"
+				      style="display:none;">Please enter your answer </span>
 				<div class="form-group row">
 					<label for="questionText"
 					       class="col-sm-2 col-form-label">Question:
@@ -25,7 +27,7 @@
 					<div class="col-sm-10">
 						<input type="text"
 						       class="form-control"
-						       id="questionTextAnswModal"
+						       id="questionTextPanel"
 						       disabled>
 					</div>
 				</div>
@@ -42,6 +44,7 @@
 			<div class="modal-footer">
 				<button type="button"
 				        class="btn btn-secondary"
+				        onclick="resetModal()"
 				        data-dismiss="modal">Cancel
 				</button>
 				<button type="button"
@@ -54,16 +57,28 @@
 </div>
 
 <script>
+	function resetModal() {
+    $("#invalidFormMsg")[0].style = "display:none;"
+  }
+
+
   function answerQuestion() {
     let answerText;
     if (questionToAnswer.type_id == 4)
-      answerText = $("#questionText")[0].value;
-    else answerText = $('input[name=option]:checked').val()
+      answerText = $("#answerText")[0].value.trim();
+    else answerText = $('input[name=option]:checked').val();
+    let validForm = answerText !== undefined && answerText !== '';
+    if (!validForm) {
+      $("#invalidFormMsg")[0].style = "display:block; color: red; padding-bottom:20px";
+      return false;
+    } else {
+      $("#invalidFormMsg")[0].style = "display:none;"
+    }
 
     let answer = {
       questionId: questionToAnswer.id,
       employeeId: 20,
-      text:answerText
+      text: answerText
     }
 
     axios.post('/api/answer/', answer)
@@ -79,6 +94,16 @@
         });
   }
 
+  function validateFields() {
+    let answer = $("#answersPanel textarea")[0].value;
+    validForm = answer.value === '';
+    if (!validForm) {
+      $("#invalidFormMsg")[0].style = "display:block; color: red; padding-bottom:20px";
+      return false;
+    } else {
+      $("#invalidFormMsg")[0].style = "display:none;"
+    }
+  }
 
 </script>
 

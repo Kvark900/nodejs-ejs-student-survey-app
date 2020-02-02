@@ -32,5 +32,15 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+router.get('/question/:id', async (req, res, next) => {
+  try {
+    let answers = await dao.getAnswersByQuestionId(parseInt(req.params.id));
+    res.status(200).send(answers.rows);
+  } catch (e) {
+    res.status(400).json({message: e.message})
+  }
+});
+
+
 
 module.exports = router;

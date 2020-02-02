@@ -13,21 +13,7 @@
 			     style="width: 80%;">
 				<div id="studentNavPanel"
 				     style="display: flex; flex-direction: column; align-items: center;">
-					<ul id="studentNavbar"
-					    class="nav nav-tabs">
-						<li class="nav-item">
-							<a class="nav-link student-nav-item"
-							   onclick="activate(0)"
-							   href="/student/answers">Answers
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active student-nav-item"
-							   onclick="activate(1)"
-							   href="/student/questions">Questions
-							</a>
-						</li>
-					</ul>
+					<% include ../partials/student/student-nav.ejs%>
 				</div>     <!-- End vertical navbar -->
 				<div class="accordion"
 				     style="margin-top: 50px"
@@ -225,7 +211,7 @@
 
       function showAnswerModal(question) {
         questionToAnswer = question;
-        $("#questionTextAnswModal")[0].value = "" + question.question;
+        $("#questionTextPanel")[0].value = "" + question.question;
         initiOptions();
       }
 
@@ -250,7 +236,7 @@
           let answerArea =
               `<textarea required
 							           class="form-control rounded-0"
-							           id="questionText"
+							           id="answerText"
 							           rows="5">
 							 </textarea>`
           answersPanel.insertAdjacentHTML("beforeend", answerArea);

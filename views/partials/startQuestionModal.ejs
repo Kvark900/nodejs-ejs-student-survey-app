@@ -108,13 +108,11 @@
       timerHtml.textContent = `Question "${questionToActivate.text}" is active for ${minutes}:${seconds}`;
 
       if (--timer < 0) {
-        console.log("Clearing interval")
         clearInterval(interval);
-        console.log("Clearing html timer")
         timerHtml.textContent = "";
         disableActivation(false);
-        console.log("Deactivating question")
         deactivateQuestion(questionToActivate.id);
+        $('input:checked').prop("checked", false)
       }
     }, 1000);
   }

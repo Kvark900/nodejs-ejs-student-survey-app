@@ -18,7 +18,11 @@ body {
 
 #profContent {
     width: 100%;
-    padding-left:    20px;
+    padding-left: 20px;
+    padding-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     /*display: flex;*/
 }
 
@@ -75,7 +79,8 @@ body {
 #content {
     padding: 30px 15px;
     display: flex;
-
+    flex-direction: column;
+    align-items: center;
 }
 
 #resultTable th, td {
@@ -96,20 +101,28 @@ a {
 }
 
 #answSearchPanel {
-    width: 40%;
+    width: 60%;
 }
+
 #questionSearchPanel {
-    width: 40%;
+    width: 60%;
 }
-#addQuestionPanel{
+
+#addQuestionPanel {
     width: 100%;
     display: flex;
 }
-#addQuestionFormPanel {
-    width: 65%;
+
+#timerDiv {
+    width: 30%;
+
 }
 
-.student-nav-item{
+#addQuestionFormPanel {
+    width: 100%;
+}
+
+.student-nav-item {
     font-size: 2.5vw;
     padding: 8px 35px !important;
 }
