@@ -9,59 +9,213 @@
 		</header>
 		<div id="content"
 		     style="display: flex; flex-direction: column; align-items: center;">
-			<ul id=""
-			    class="nav nav-tabs">
-				<li class="nav-item">
-					<a class="nav-link student-nav-item"
-					   onclick="activate(0)"
-					   href="/student/answers">Answers
-					</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link active student-nav-item"
-					   onclick="activate(1)"
-					   href="/student/questions">Questions
-					</a>
-				</li>
-			</ul>      <!-- End vertical navbar -->
-			<div id="activeQuestionsPanel">
-				<h3 style="padding: 22px 0;">Active questions</h3>
-				<table id="activeQuestionsTable"
-				       class="table">
-					<thead class="thead-light">
-						<tr>
-							<th>Question</th>
-							<th>Type</th>
-							<th>Category</th>
-							<th></th>
-						</tr>
-					</thead>
-					<% for (let i = 0; i < questions.length; i++) { %>
-						<tr>
-							<td>
-								<%= questions[i].question %>
-							</td>
-							<td>
-								<%= questions[i].q_type %>
-							</td>
-							<td>
-								<%= questions[i].q_category %>
-							</td>
-							<td>
-								<input type="image"
-								       src="https://img.icons8.com/windows/32/000000/stack-exchange-answer.png"
-								       data-toggle="modal"
-								       data-target="#answerModal"
-								       onclick='showAnswerModal(<%- JSON.stringify(questions[i]) %>)'
-								/>
-							</td>
-						</tr>
-					<% } %>
-				</table>
+			<div id="centeredContentPanel"
+			     style="width: 80%;">
+				<div id="studentNavPanel"
+				     style="display: flex; flex-direction: column; align-items: center;">
+					<ul id="studentNavbar"
+					    class="nav nav-tabs">
+						<li class="nav-item">
+							<a class="nav-link student-nav-item"
+							   onclick="activate(0)"
+							   href="/student/answers">Answers
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active student-nav-item"
+							   onclick="activate(1)"
+							   href="/student/questions">Questions
+							</a>
+						</li>
+					</ul>
+				</div>     <!-- End vertical navbar -->
+				<div class="accordion"
+				     style="margin-top: 50px"
+				     id="accordionExample">
+					<div class="card">
+						<div class="card-header"
+						     id="headingOne">
+							<h5 class="mb-0">
+								<button class="btn btn-link"
+								        type="button"
+								        data-toggle="collapse"
+								        data-target="#collapseOne"
+								        aria-expanded="true"
+								        style="font-size: 18px; text-decoration: none;"
+								        aria-controls="collapseOne">
+									Active Questions
+								</button>
+							</h5>
+						</div>
+
+						<div id="collapseOne"
+						     class="collapse  show"
+						     aria-labelledby="headingOne"
+						     data-parent="#accordionExample">
+							<div class="card-body">
+								<% if(activeQuestions.length > 0){ %>
+									<div id="activeQuestionsPanel"
+									     style="padding: 20px">
+										<table id="activeQuestionsTable"
+										       style="width: auto; min-width: 50%; "
+										       class="table">
+											<thead>
+												<tr>
+													<th>Question</th>
+													<th>Type</th>
+													<th>Category</th>
+													<th></th>
+												</tr>
+											</thead>
+											<% for (let i = 0; i < activeQuestions.length; i++) { %>
+												<tr>
+													<td>
+														<%= activeQuestions[i].question %>
+													</td>
+													<td>
+														<%= activeQuestions[i].q_type %>
+													</td>
+													<td>
+														<%= activeQuestions[i].q_category %>
+													</td>
+													<td>
+														<input type="image"
+														       src="https://img.icons8.com/windows/32/000000/stack-exchange-answer.png"
+														       data-toggle="modal"
+														       data-target="#answerModal"
+														       onclick='showAnswerModal(<%- JSON.stringify(activeQuestions[i]) %>)'
+														/>
+													</td>
+												</tr>
+											<% } %>
+										</table>
+									</div>
+								<% } %>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-header"
+						     id="askHeader">
+							<h5 class="mb-0">
+								<button class="btn btn-link"
+								        type="button"
+								        data-toggle="collapse"
+								        data-target="#askedQuestionsCollapse"
+								        aria-expanded="true"
+								        style="font-size: 18px; text-decoration: none;"
+								        aria-controls="askedQuestionsCollapse">
+									Ask Questions
+								</button>
+							</h5>
+						</div>
+
+						<div id="askedQuestionsCollapse"
+						     class="collapse  collapsed"
+						     aria-labelledby="askHeader"
+						     data-parent="#accordionExample">
+							<div class="card-body">
+								<div id="askQuestionPanel"
+								     style="<% if (activeQuestions.length > 0) "margin-top: 200px" %> padding: 20px">
+
+									<!--========================================================-->
+									<!--SUBJECTS-->
+									<!--========================================================-->
+									<div class="form-group row">
+										<label for="subjectBox"
+										       class="d-flex flex-row-reverse col-sm-2 col-form-label">Subject:
+										</label>
+										<div class="col-sm-10 d-flex">
+											<select required
+											        class="custom-select"
+											        onchange="reRenderLectures()"
+											        id="subjectBox">
+												<% for (let i = 0; i < subjects.length; i++){ %>
+													<option value="<%= subjects[i].id %>">
+														<%= subjects[i].name %>
+													</option>
+												<% } %>
+											</select>
+										</div>
+									</div>
+
+									<!--========================================================-->
+									<!-- LECTURES-->
+									<!--========================================================-->
+									<div class="form-group row">
+										<label for="lectureBox"
+										       class="d-flex flex-row-reverse col-sm-2 col-form-label">Lecture:
+										</label>
+										<div class="col-sm-10">
+											<select required
+											        class="custom-select"
+											        id="lectureBox">
+												<option value="">
+													Choose subject first!
+												</option>
+											</select>
+										</div>
+									</div>
+
+									<!--========================================================-->
+									<!--QUESTION-->
+									<!--========================================================-->
+									<div class="form-group row">
+										<label for="questionText"
+										       class="d-flex flex-row-reverse col-sm-2 col-form-label">Question:
+										</label>
+										<div class="col-sm-10">
+													<textarea type="text"
+													          class="form-control"
+													          id="askQuestionText">
+													</textarea>
+										</div>
+									</div>
+									<div class="form-group row d-flex flex-row-reverse">
+										<button type="button"
+										        onclick="ask()"
+										        class="btn btn-primary">Ask
+										</button>
+									</div>
+									<hr>
+
+									<!--========================================================-->
+									<!--ASKED QUESTIONS-->
+									<!--========================================================-->
+									<table id="askQuestionsTable"
+									       style="width: auto; min-width: 50%;"
+									       class="table">
+										<thead>
+											<tr>
+												<th>Question</th>
+												<th>Lecture</th>
+												<th></th>
+											</tr>
+										</thead>
+										<% for (let i = 0; i < studentsQuestions.length; i++) { %>
+											<tr>
+												<td>
+													<%= studentsQuestions[i].text %>
+												</td>
+												<td>
+													<%= studentsQuestions[i].lecture %>
+												</td>
+												<td>
+													<%= studentsQuestions[i].likes %>
+													<input id="like<%= i %>"
+													       onclick="likeQuestion(<%=studentsQuestions[i].id %>, <%= i %>)"
+													       type="image"
+													       src="https://img.icons8.com/dusk/20/000000/facebook-like.png">
+												</td>
+											</tr>
+										<% } %>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-			<dvi id="askQuestionPanel">
-<!--				<h3 style="padding: 22px 0;">Ask question</h3>-->
-			</dvi>
 		</div>
 		<% include ../partials/student/answerModal.ejs %>
 		<% include ../partials/scripts.ejs %>
@@ -73,6 +227,20 @@
         questionToAnswer = question;
         $("#questionTextAnswModal")[0].value = "" + question.question;
         initiOptions();
+      }
+
+      function likeQuestion(id, i) {
+        axios.patch('/api/studentQuestion/' + id)
+            .then(res => {
+              console.log("Succes in liking question");
+              $("#askQuestionsTable").load(" #askQuestionsTable", () => {
+                $("#askQuestionsTable").children().unwrap();
+              });
+              $(`#like${i}`).prop("disabled", true);
+            })
+            .catch(err => {
+              console.log(err);
+            });
       }
 
       function initiOptions() {
@@ -115,6 +283,50 @@
           answersPanel.insertAdjacentHTML("beforeend", option);
         }
       }
+
+      function reRenderLectures() {
+        let subjectId = $("#subjectBox")[0].value;
+        let url = `/api/lecture?subjectId=${subjectId}`;
+        axios.get(url)
+            .then(res => {
+              console.log(res.data);
+              let lectureBox = $("#lectureBox")[0];
+              lectureBox.innerHTML = "";
+              for (let i = 0; i < res.data.length; i++) {
+                let date = res.data[i].date_time;
+                let option =
+                    `<option value=${res.data[i].id}>
+								 	  ${res.data[i].subject_name} ${date}
+								 </option>`;
+                lectureBox.insertAdjacentHTML("beforeend", option);
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+
+      }
+
+      function ask() {
+        let question = {
+          lecture_id: $("#lectureBox")[0].value,
+          text: $("#askQuestionText")[0].value
+        };
+
+        axios.post('/api/studentQuestion', question)
+            .then(res => {
+              $("#askQuestionText")[0].value = "";
+              console.log("Success in posting student's question");
+              $("#askQuestionsTable").load(" #askQuestionsTable", () => {
+                $("#askQuestionsTable").children().unwrap();
+              });
+            })
+            .catch(err => {
+              console.log(err);
+            });
+      }
+
+      document.onload = reRenderLectures();
 		</script>
 	</body>
 </html>

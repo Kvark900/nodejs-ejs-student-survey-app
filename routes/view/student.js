@@ -24,9 +24,15 @@ router.get('/answers', async (req, res, next) => {
 
 router.get('/questions', async (req, res, next) => {
   try {
-    let questions = await dao.getActiveQuestionsForStudent(20);  //TODO: replace this with current student
-
-    res.render('student/questions', {title: "Student Questions", questions: questions.rows});
+    let subjects = await dao.getStudentsSubjects(20);
+    let activeQuestions = await dao.getActiveQuestionsForStudent(20);  //TODO: replace this with current student
+    let studentsQuestions = await dao.getStudentsQuestions(20);
+    res.render('student/questions', {
+      title: "Student Questions",
+      activeQuestions: activeQuestions.rows,
+      studentsQuestions: studentsQuestions.rows,
+      subjects: subjects.rows
+    });
   } catch (e) {
     console.log(e.message)
   }

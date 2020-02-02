@@ -1,5 +1,6 @@
 const dbConfig = require("../config/dbConfig");
 const Answer = require("../model/Answer");
+const StudentQuestion = require("../model/StudentQuestion");
 
 async function getSubjects() {
   try {
@@ -283,7 +284,8 @@ async function getStudentsAnswers(studentId) {
                   FROM survey_copy.question_answer qa
                   JOIN survey_copy.question q
                        ON qa.question_id = q.id
-                  WHERE qa.student_id = $1;`;
+                  WHERE qa.student_id = $1
+                  ORDER BY qa.date_of_answer DESC;`;
 
   let result = await dbConfig.pool.query(query, [studentId]);
   console.info(new Date() + ": Getting student's answers success");
@@ -334,6 +336,48 @@ async function saveAnswer(answer) {
   console.info("Inserting answer success");
 }
 
+async function getStudentsQuestions(studentId) {
+  let query = `SELECT sq.*, s.name || ' ' || TO_CHAR(l.date_time :: DATE, 'DD.MM.YYYY hh:mm:ss') as lecture
+               FROM survey_copy.student_question sq
+               JOIN survey_copy.lecture l
+                    ON sq.lecture_id = l.id
+               JOIN survey_copy.subject s
+                    ON l.subject_id = s.id
+               WHERE s.id IN (
+                   SELECT ss.subject_id
+                   FROM survey_copy.students_subjects ss
+                   WHERE ss.student_id = $1
+               )
+               ORDER BY sq.likes DESC;`;
+  let questions = await dbConfig.pool.query(query, [studentId]);
+  console.info("Getting student's questions success");
+  return questions;
+}
+
+async function getStudentsSubjects(studentId) {
+  let query = `SELECT s.*
+               FROM survey_copy.subject s
+               JOIN survey_copy.students_subjects ss
+                    ON s.id = ss.subject_id
+               WHERE ss.student_id = $1`;
+  return await dbConfig.pool.query(query, [studentId]);
+}
+
+async function postStudentQuestion(studentQuestion) {
+  if (!studentQuestion instanceof StudentQuestion) throw Error("Not an question type");
+  let query = `INSERT INTO survey_copy.student_question (text, lecture_id, likes)
+               VALUES ($1, $2, $3);`;
+  let result = await dbConfig.pool.query(query, [studentQuestion.qText, studentQuestion.lectureId, studentQuestion.likes]);
+  console.info("Inserting student question success");
+}
+
+async function likeQuestion(studentId) {
+  let query = `UPDATE survey_copy.student_question SET likes = likes + 1 WHERE id = $1;`
+  await dbConfig.pool.query(query, [studentId]);
+  console.info("Liking student question success");
+}
+
+
 module.exports = {
   getSubjects,
   getQuestionCategories,
@@ -355,5 +399,9 @@ module.exports = {
   changeQuestionsActiveState,
   getStudentsAnswers,
   getActiveQuestionsForStudent,
-  saveAnswer
+  saveAnswer,
+  getStudentsQuestions,
+  getStudentsSubjects,
+  postStudentQuestion,
+  likeQuestion
 };

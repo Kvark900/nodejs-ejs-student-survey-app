@@ -12,6 +12,7 @@ const apiRouter = require('./routes/rest/api');
 const questionRouter = require('./routes/rest/question');
 const lectureRouter = require('./routes/rest/lecture');
 const answerRouter = require('./routes/rest/answer');
+const studentsQuestionRouter = require('./routes/rest/studentQuestion');
 
 
 const moment = require("moment");
@@ -37,6 +38,7 @@ server.use('/api', apiRouter);
 server.use('/api/question', questionRouter);
 server.use('/api/lecture', lectureRouter);
 server.use('/api/answer', answerRouter);
+server.use('/api/studentQuestion', studentsQuestionRouter);
 
 // catch 404 and forward to error handler
 server.use(function (req, res, next) {
