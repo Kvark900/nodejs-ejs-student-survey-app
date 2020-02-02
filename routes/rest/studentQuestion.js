@@ -25,5 +25,12 @@ router.patch("/:id", async (req, res, next) => {
   }
 });
 
-
+router.get('/', async (req, res, next) => {
+  try {
+    let questions = await dao.getStudentsQuestionsByLectureId(parseInt(req.query.lectureId));
+    res.status(200).send(questions.rows);
+  } catch (e) {
+    res.status(400).send(e.message)
+  }
+});
 module.exports = router;

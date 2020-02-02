@@ -60,6 +60,17 @@ router.get('/question', async (req, res, next) => {
         });
 });
 
+router.get('/studentQuestion', async (req, res, next) => {
+  let subjects = await dao.getSubjectsByProfessorId(2); // TODO: get currently logged in professor's id
+  res.render('teacher/studentsQuestionFinder',
+      {
+        title: 'Question',
+        moment: moment,
+        subjects: subjects.rows,
+      });
+});
+
+
 router.get('/answers', async (req, res, next) => {
     let subjects = await dao.getSubjectsByProfessorId(2); // TODO: get currently logged in professor's id
     res.render('teacher/answerFinder',

@@ -12,7 +12,7 @@
 	</li>
 	<li class="nav-item">
 		<a class="nav-link  student-nav-item"
-		   href="#">Results
+		   href="/teacher/studentQuestion">Student's questions
 		</a>
 	</li>
 </ul>
@@ -24,12 +24,13 @@
     let href = window.location.href;
     if (href.includes("answer"))
       $(".student-nav-item").eq(0).addClass("active");
-		else if (href.includes("question") || href.includes("Question"))
+    else if (href.includes("student"))
+      $(".student-nav-item").eq(2).addClass("active");
+    else if (href.includes("question") || href.includes("Question"))
       $(".student-nav-item").eq(1).addClass("active");
-		else if(href.includes("results"))
-      $(".student-nav-item").eq(1).addClass("active");
+
   }
 
-  document.onloadend =activate()
+  document.onloadend = activate()
 
 </script>

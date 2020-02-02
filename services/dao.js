@@ -142,13 +142,16 @@ async function getQuestionCategories() {
 
 async function getQuestionsByLectureId(lecture_id) {
   try {
-    let query = `SELECT q.*, t.name AS type, c.name AS category
-                   FROM survey_copy.question q
-                   JOIN survey_copy.question_category c
-                        ON q.category_id = c.id
-                   JOIN survey_copy.question_type t
-                        ON q.type_id = t.id
-                   WHERE lecture_id = $1;
+    let query = `SELECT q.*, t.name AS type, c.name AS category, json_agg(mc.answer) AS options
+                 FROM survey_copy.question q
+                 JOIN survey_copy.question_category c
+                      ON q.category_id = c.id
+                 JOIN survey_copy.question_type t
+                      ON q.type_id = t.id
+                 LEFT JOIN survey_copy.multiple_choices mc
+                      ON q.id = mc.question_id
+                 WHERE lecture_id = $1
+                 GROUP BY q.id, q.question, q.lecture_id, q.type_id, q.category_id, t.name, c.name;
                   `;
     let result = await dbConfig.pool.query(query, [isNaN(lecture_id) ? null : lecture_id]);
     console.info(new Date() + ": Getting questions by lecture id success");
@@ -299,12 +302,12 @@ async function getAnswersByQuestionId(questionId) {
 
 async function getActiveQuestionsForStudent(studentId) {
   let query = `SELECT q.id,
-                        q.question,
-                        q.active,
-                        q.type_id           AS type_id,
-                        qt.name             AS q_type,
-                        qc.name             AS q_category,
-                        json_agg(mc.answer) AS options
+                      q.question,
+                      q.active,
+                      q.type_id           AS type_id,
+                      qt.name             AS q_type,
+                      qc.name             AS q_category,
+                      json_agg(mc.answer) AS options
                 FROM survey_copy.question q
                 JOIN survey_copy.lecture l
                      ON q.lecture_id = l.id
@@ -359,6 +362,21 @@ async function getStudentsQuestions(studentId) {
   return questions;
 }
 
+async function getStudentsQuestionsByLectureId(lectureId) {
+  let query = `SELECT sq.*, s.name || ' ' || TO_CHAR(l.date_time :: DATE, 'DD.MM.YYYY hh:mm:ss') AS lecture
+               FROM survey_copy.student_question sq
+               JOIN survey_copy.lecture l
+                    ON sq.lecture_id = l.id
+               JOIN survey_copy.subject s
+                    ON l.subject_id = s.id
+               WHERE sq.lecture_id = $1
+               ORDER BY sq.likes DESC`;
+  let questions = await dbConfig.pool.query(query, [lectureId]);
+  console.info("Getting student's questions success");
+  return questions;
+}
+
+
 async function getStudentsSubjects(studentId) {
   let query = `SELECT s.*
                FROM survey_copy.subject s
@@ -409,5 +427,6 @@ module.exports = {
   getStudentsSubjects,
   postStudentQuestion,
   likeQuestion,
-  getAnswersByQuestionId
+  getAnswersByQuestionId,
+  getStudentsQuestionsByLectureId
 };

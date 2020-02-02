@@ -54,12 +54,6 @@
 								        onclick="search()"
 								        class="btn btn-primary">Search
 								</button>
-								<button type="button"
-								        id="addNewBtn"
-								        style="margin-right: 20px"
-								        onclick="goToAdd()"
-								        class="btn btn-primary">New Question
-								</button>
 							</div>
 						</div>
 						<div id="timerDiv">
@@ -74,10 +68,8 @@
 							<thead class="thead-light">
 								<tr>
 									<th>Question</th>
-									<th>Type</th>
-									<th>Category</th>
-									<th>Active</th>
-									<th></th>
+									<th>Lecture</th>
+									<th>Likes</th>
 									<th></th>
 								</tr>
 							<thead>
@@ -114,27 +106,16 @@
         });
       }
 
-      function goToAdd() {
-        window.location.replace("http://localhost:3000/teacher/addQuestion");
-      }
-
-      function goToUpdate(id) {
-        window.location.replace("http://localhost:3000/teacher/updateQuestion/" + id);
-      }
-
       function search() {
         let lectureId = $("#lectureBox")[0].value;
-        let url = `/api/question?lectureId=${lectureId}`;
+        let url = `/api/studentQuestion?lectureId=${lectureId}`;
         let table = $("#resultTable")[0];
         table.innerHTML = "";
         table.innerHTML = `  <thead class="thead-light">
 																<tr>
 																 <th>Question</th>
-																 <th>Type</th>
-																 <th>Category</th>
-																 <th>Active</th>
-																 <th></th>
-																 <th></th>
+																 <th>Lecture</th>
+																 <th>Likes</th>
 																 <th></th>
 																</tr>
 															<thead>`;
@@ -145,70 +126,24 @@
                 let jsonObj = JSON.stringify(res[i]);
                 let question =
                     `
-								<tr>
-									<td>
-										${res[i].question}
-									</td>
-									<td>
-										${res[i].type}
-									</td>
-									<td>
-										${res[i].category}
-									</td>
-									<td style="padding-left: 20px">
-											<div>
-											  <input type="checkbox" disabled id="activeQuestion${i}">
-											</div>
-									</td>
-									<td>
-										<input type="image" style="height: 20px"
-											   onclick="deleteQuestion(${res[i].id}, this.parentElement.parentElement.rowIndex)"
-					  						 src="https://img.icons8.com/material-sharp/24/000000/filled-trash.png"/>
-									</td>
-									<td style="padding-left: 20px">
-											<input type="image" style="height: 20px"
-														onclick="goToUpdate(${res[i].id})"
-													  src="https://img.icons8.com/ios-filled/50/000000/ball-point-pen.png">
-									</td>
-									<td style="padding-left: 20px">
-											<input type="image" src="https://img.icons8.com/ios-glyphs/30/000000/start.png"
-															data-toggle="modal"
-															class="modal-btn"
-															onclick="showModal(${jsonObj}, ${i})"
-															data-target="#exampleModal"/>
-									</td>
-							  	</tr>
+											<tr>
+													<td>
+														 ${res[i].text}
+													</td>
+													<td>
+														 ${res[i].lecture}
+													</td>
+														<td>
+															 ${res[i].likes}
+														</td>
+									    </tr>
 		                        `
                 table.insertAdjacentHTML("beforeend", question);
-                $('#activeQuestion' + i).prop('checked', res[i].active);
               }
             }
         );
       }
 
-      function changeActiveState(box) {
-        let boxes = $("input[type~='checkbox']");
-        if (!box.checked) return;
-        for (let i = 0; i < boxes.length; i++) {
-          if (boxes[i].id !== box.id)
-            boxes[i].checked = false;
-        }
-      }
-
-      function deleteQuestion(id, index) {
-        $.ajax({
-          url: "/api/question/" + id,
-          type: 'DELETE',
-          error: (xhr, error) => {
-            console.error("Error in ajax req: " + error);
-          },
-          success: () => {
-            console.info("Delete success");
-            $("#resultTable")[0].deleteRow(index);
-          }
-        });
-
-      }
 
       function showModal(question, index) {
         questionToActivate = question;
@@ -217,8 +152,6 @@
       }
 
 		</script>
-
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
 
 		<% include ../partials/scripts.ejs %>
 		<script>

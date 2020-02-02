@@ -49,31 +49,11 @@ body {
 
 
 @media screen and (max-width: 900px) {
-    /*#sidebar {
-        margin-left: -17rem;
-    }
-*/
     body {
         background-color: blue;
     }
 
-    /*#sidebar.active {
-        margin-left: 0;
-    }
 
-    #content {
-        width: 100%;
-        margin: 0;
-    }
-
-    #content.active {
-        margin-left: 17rem;
-        width: calc(100% - 17rem);
-    }
-
-    #profContent {
-        width: 95%;
-    }*/
 }
 
 #content {
