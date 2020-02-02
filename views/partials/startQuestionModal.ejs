@@ -105,11 +105,14 @@
 
       minutes = minutes < 10 ? "0" + minutes : minutes;
       seconds = seconds < 10 ? "0" + seconds : seconds;
-      timerHtml.textContent = `Question "${questionToActivate.text}" is active for ${minutes}:${seconds}`;
+      timerHtml.innerHTML = `
+      <div class="alert alert-info" role="alert">
+		    Question "${questionToActivate.text}" is active for <strong>${minutes}:${seconds}</strong>
+			</div>`;
 
       if (--timer < 0) {
         clearInterval(interval);
-        timerHtml.textContent = "";
+        timerHtml.innerHTML = "";
         disableActivation(false);
         deactivateQuestion(questionToActivate.id);
         $('input:checked').prop("checked", false)
