@@ -27,8 +27,8 @@
 				</li>
 			</ul>
 			<div id="studentAnswersPanel">
-				<table>
-					<thead>
+				<table class="table">
+					<thead class="thead-light">
 						<tr>
 							<th>Date</th>
 							<th>Question</th>
@@ -37,7 +37,7 @@
 					</thead>
 					<% for (let i = 0; i < answers.length; i++){ %>
 						<tr>
-							<td><%= moment(answers[i].date_of_answer).format('DD.MM.YYYY h:mm:ss')%></td>
+							<td><%= moment(answers[i].date_of_answer).format('DD.MM.YYYY h:mm:ss') %></td>
 							<td><%= answers[i].question %></td>
 							<td><%= answers[i].answer %></td>
 						</tr>

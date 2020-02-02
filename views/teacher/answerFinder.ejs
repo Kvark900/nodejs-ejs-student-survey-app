@@ -67,8 +67,9 @@
 				</div>
 				<hr style="border: 1px solid rgba(0,0,0,.1);"/>
 				<div>
-					<table id="resultTable">
-						<thead>
+					<table id="resultTable"
+					       class="table">
+						<thead class="thead-light">
 							<tr>
 								<th>Date</th>
 								<th>Student</th>
@@ -85,90 +86,93 @@
 		</div>
 
 		<script>
-        let nothingSelected = `<option value="">
+      let nothingSelected = `<option value="">
 																Nothing selected
 															</option>
 														`;
-        function reRenderLectures() {
-            let subjectId = $("#subjectBox")[0].value;
-            let url = `/api/lecture?subjectId=${subjectId}`;
-            $.get(url).then((res) => {
-                let lectureBox = $("#lectureBox")[0];
-                lectureBox.innerHTML = "";
-                if (res.length === 0) {
-                    let option =
-                        `<option value="">
+
+      function reRenderLectures() {
+        let subjectId = $("#subjectBox")[0].value;
+        let url = `/api/lecture?subjectId=${subjectId}`;
+        $.get(url).then((res) => {
+          let lectureBox = $("#lectureBox")[0];
+          lectureBox.innerHTML = "";
+          if (res.length === 0) {
+            let option =
+                `<option value="">
 														No lectures
 													</option>
 		                    `;
-                    lectureBox.insertAdjacentHTML("beforeend", option);
-                    reRenderQuestions();
-                    return;
-                }
-                lectureBox.insertAdjacentHTML("beforeend", nothingSelected);
+            lectureBox.insertAdjacentHTML("beforeend", option);
+            reRenderQuestions();
+            return;
+          }
+          lectureBox.insertAdjacentHTML("beforeend", nothingSelected);
 
-                for (let i = 0; i < res.length; i++) {
-                    let date = moment(res[i].date_time).format('DD.MM.YYYY h:mm:ss');
-                    let option =
-                        `<option value=${res[i].id}>
+          for (let i = 0; i < res.length; i++) {
+            let date = moment(res[i].date_time).format('DD.MM.YYYY h:mm:ss');
+            let option =
+                `<option value=${res[i].id}>
 														${res[i].subject_name} ${date}
 													</option>
 		                    `;
-                    lectureBox.insertAdjacentHTML("beforeend", option);
-                }
-                reRenderQuestions();
-            });
-        }
+            lectureBox.insertAdjacentHTML("beforeend", option);
+          }
+          reRenderQuestions();
+        });
+      }
 
-        function reRenderQuestions() {
-            let lectureId = $("#lectureBox")[0].value;
-            let url = `/api/question?lectureId=${lectureId}`;
-            $.get(url).then((res) => {
-                let questionBox = $("#questionBox")[0];
-                questionBox.innerHTML = "";
-                if (res.length === 0) {
-                    let option =
-                        `<option value="">
+      function reRenderQuestions() {
+        let lectureId = $("#lectureBox")[0].value;
+        let url = `/api/question?lectureId=${lectureId}`;
+        $.get(url).then((res) => {
+          let questionBox = $("#questionBox")[0];
+          questionBox.innerHTML = "";
+          if (res.length === 0) {
+            let option =
+                `<option value="">
 														No questions
 													</option>
 		                    `;
-                    questionBox.insertAdjacentHTML("beforeend", option);
-                    return;
-                }
-                questionBox.insertAdjacentHTML("beforeend", nothingSelected);
-                for (let i = 0; i < res.length; i++) {
-                    let option =
-                        `<option value=${res[i].id}>
+            questionBox.insertAdjacentHTML("beforeend", option);
+            return;
+          }
+          questionBox.insertAdjacentHTML("beforeend", nothingSelected);
+          for (let i = 0; i < res.length; i++) {
+            let option =
+                `<option value=${res[i].id}>
 														${res[i].question}
 													</option>
 		                    `;
-                    questionBox.insertAdjacentHTML("beforeend", option);
-                }
-            });
-        }
+            questionBox.insertAdjacentHTML("beforeend", option);
+          }
+        });
+      }
 
-        function search() {
-            let subjectId = $("#subjectBox")[0].value;
-            let lectureId = $("#lectureBox")[0].value;
-            let questionId = $("#questionBox")[0].value;
+      function search() {
+        let subjectId = $("#subjectBox")[0].value;
+        let lectureId = $("#lectureBox")[0].value;
+        let questionId = $("#questionBox")[0].value;
 
-            let url = `/api/answer?subjectId=${subjectId}&lectureId=${lectureId}&questionId=${questionId}`;
-            let table = $("#resultTable")[0];
-            table.innerHTML = "";
-            table.innerHTML = `<thead>
+        let url = `/api/answer?subjectId=${subjectId}&lectureId=${lectureId}&questionId=${questionId}`;
+        let table = $("#resultTable")[0];
+        table.innerHTML = "";
+        table.innerHTML = `<thead class="thead-light">
 																<tr>
 																 <th>Date</th>
 																 <th>Student</th>
 																 <th>Question</th>
 																 <th>Answer</th>
+																 <th></th>
+																 <th></th>
 																</tr>
 															<thead>`;
 
-            $.get(url).then((res) => {
-                    console.log(res);
-                    for (let i = 0; i < res.length; i++) {
-                        let question =
-                            `
+        $.get(url).then((res) => {
+              console.log(res);
+              for (let i = 0; i < res.length; i++) {
+                let question =
+                    `
 															<tr>
 																<td>
 																	${moment(res[i].date_of_answer).format('DD.MM.YYYY h:mm:ss')}
@@ -184,39 +188,39 @@
 																</td>
 														  </tr>
 		                        `
-                        table.insertAdjacentHTML("beforeend", question);
-                    }
-                }
-            );
-        }
-
-        function changeActiveState(box) {
-            let boxes = $("input[type~='checkbox']");
-            if (!box.checked) return;
-            for (let i = 0; i < boxes.length; i++) {
-                if (boxes[i].id !== box.id)
-                    boxes[i].checked = false;
+                table.insertAdjacentHTML("beforeend", question);
+              }
             }
-        }
+        );
+      }
 
-        function deleteQuestion(id, index) {
-            $.ajax({
-                url: "/api/question/" + id,
-                type: 'DELETE',
-                error: (xhr, error) => {
-                    console.error("Error in ajax req: " + error);
-                },
-                success: () => {
-                    console.info("Delete success");
-                    $("#resultTable")[0].deleteRow(index);
-                }
-            });
-
+      function changeActiveState(box) {
+        let boxes = $("input[type~='checkbox']");
+        if (!box.checked) return;
+        for (let i = 0; i < boxes.length; i++) {
+          if (boxes[i].id !== box.id)
+            boxes[i].checked = false;
         }
+      }
+
+      function deleteQuestion(id, index) {
+        $.ajax({
+          url: "/api/question/" + id,
+          type: 'DELETE',
+          error: (xhr, error) => {
+            console.error("Error in ajax req: " + error);
+          },
+          success: () => {
+            console.info("Delete success");
+            $("#resultTable")[0].deleteRow(index);
+          }
+        });
+
+      }
 		</script>
 		<% include ../partials/scripts.ejs %>
 		<script>
-        document.onload = reRenderLectures();
+      document.onload = reRenderLectures();
 		</script>
 	</body>
 </html>

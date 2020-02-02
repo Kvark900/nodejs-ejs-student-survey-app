@@ -71,8 +71,9 @@
 				</div>
 				<hr style="border: 1px solid rgba(0,0,0,.1);"/>
 				<div>
-					<table id="resultTable">
-						<thead>
+					<table class="table"
+					       id="resultTable">
+						<thead class="thead-light">
 							<tr>
 								<th>Question</th>
 								<th>Type</th>
@@ -80,7 +81,6 @@
 								<th>Active</th>
 								<th></th>
 								<th></th>
-
 							</tr>
 						<thead>
 					</table>
@@ -125,12 +125,16 @@
         let url = `/api/question?lectureId=${lectureId}`;
         let table = $("#resultTable")[0];
         table.innerHTML = "";
-        table.innerHTML = `<thead>
+        table.innerHTML = `  <thead class="thead-light">
+
 																<tr>
 																 <th>Question</th>
 																 <th>Type</th>
 																 <th>Category</th>
 																 <th>Active</th>
+																 <th></th>
+																 <th></th>
+																 <th></th>
 																</tr>
 															<thead>`;
 

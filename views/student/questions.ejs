@@ -6,25 +6,115 @@
 	<body>
 		<header>
 			<% include ../partials/header.ejs %>
-
 		</header>
-
-		<style>
-
-		</style>
 		<div id="content"
 		     style="display: flex; flex-direction: column; align-items: center;">
-			<ul id="" class="nav nav-tabs">
+			<ul id=""
+			    class="nav nav-tabs">
 				<li class="nav-item">
-					<a class="nav-link student-nav-item" onclick="activate(0)" href="/student/answers">Answers</a>
+					<a class="nav-link student-nav-item"
+					   onclick="activate(0)"
+					   href="/student/answers">Answers
+					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link active student-nav-item" onclick="activate(1)" href="/student/questions">Questions</a>
+					<a class="nav-link active student-nav-item"
+					   onclick="activate(1)"
+					   href="/student/questions">Questions
+					</a>
 				</li>
-			</ul>			<!-- End vertical navbar -->
-			<div id="profContent">
+			</ul>      <!-- End vertical navbar -->
+			<div id="activeQuestionsPanel">
+				<h3 style="padding: 22px 0;">Active questions</h3>
+				<table id="activeQuestionsTable"
+				       class="table">
+					<thead class="thead-light">
+						<tr>
+							<th>Question</th>
+							<th>Type</th>
+							<th>Category</th>
+							<th></th>
+						</tr>
+					</thead>
+					<% for (let i = 0; i < questions.length; i++) { %>
+						<tr>
+							<td>
+								<%= questions[i].question %>
+							</td>
+							<td>
+								<%= questions[i].q_type %>
+							</td>
+							<td>
+								<%= questions[i].q_category %>
+							</td>
+							<td>
+								<input type="image"
+								       src="https://img.icons8.com/windows/32/000000/stack-exchange-answer.png"
+								       data-toggle="modal"
+								       data-target="#answerModal"
+								       onclick='showAnswerModal(<%- JSON.stringify(questions[i]) %>)'
+								/>
+							</td>
+						</tr>
+					<% } %>
+				</table>
 			</div>
+			<dvi id="askQuestionPanel">
+<!--				<h3 style="padding: 22px 0;">Ask question</h3>-->
+			</dvi>
 		</div>
+		<% include ../partials/student/answerModal.ejs %>
 		<% include ../partials/scripts.ejs %>
+
+		<script>
+      let questionToAnswer;
+
+      function showAnswerModal(question) {
+        questionToAnswer = question;
+        $("#questionTextAnswModal")[0].value = "" + question.question;
+        initiOptions();
+      }
+
+      function initiOptions() {
+        let answersPanel = $("#answersPanel")[0];
+        answersPanel.innerHTML = "";
+        if (questionToAnswer.type_id == 4) {
+          let answerArea =
+              `<textarea required
+							           class="form-control rounded-0"
+							           id="questionText"
+							           rows="5">
+							 </textarea>`
+          answersPanel.insertAdjacentHTML("beforeend", answerArea);
+          return;
+        } else if (questionToAnswer.type_id == 1) {
+          let option =
+              `
+							<div class="custom-control custom-radio">
+							  <input type="radio" id="option1" value="Yes" name="option" class="custom-control-input">
+							  <label class="custom-control-label" for="option1">Yes</label>
+							</div>
+							<div class="custom-control custom-radio">
+							  <input type="radio" id="option2" value="No" name="option" class="custom-control-input">
+							  <label class="custom-control-label" for="option2">No</label>
+							</div>
+	            `
+          answersPanel.insertAdjacentHTML("beforeend", option);
+          return;
+        }
+        let options = questionToAnswer.options;
+        if (options.length === 0) return;
+        for (let i = 0; i < options.length; i++) {
+          let option =
+              `
+							<div class="custom-control custom-radio">
+							  <input type="radio" id="option${i}" value="${options[i]}" name="option" class="custom-control-input">
+							  <label class="custom-control-label" for="option${i}">${options[i]}</label>
+							</div>
+	            `
+          answersPanel.insertAdjacentHTML("beforeend", option);
+        }
+      }
+		</script>
 	</body>
 </html>
