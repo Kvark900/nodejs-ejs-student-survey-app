@@ -13,8 +13,7 @@
 			<% include ../partials/teacher/teacher-nav.ejs %>
 			<div id="profContent">
 				<div style="width: 80%;">
-					<div id="questionSearchPanelMain"
-					     style="display:flex;">
+					<div id="questionSearchPanelMain">
 						<div id="questionSearchPanel">
 							<h2>Question Finder</h2>
 							<div class="form-group row">
@@ -56,15 +55,13 @@
 								</button>
 								<button type="button"
 								        id="addNewBtn"
-								        style="margin-right: 20px"
 								        onclick="goToAdd()"
 								        class="btn btn-primary">New Question
 								</button>
 							</div>
 						</div>
 						<div id="timerDiv">
-							<h4 style="font-size: 1.3rem; padding-left: 50px"
-							    id="timeHeader"></h4>
+							<h4 id="timeHeader"></h4>
 						</div>
 					</div>
 					<hr style="border: 1px solid rgba(0,0,0,.1);"/>
@@ -128,16 +125,16 @@
         let table = $("#resultTable")[0];
         table.innerHTML = "";
         table.innerHTML = `  <thead class="thead-light">
-																<tr>
-																 <th>Question</th>
-																 <th>Type</th>
-																 <th>Category</th>
-																 <th>Active</th>
-																 <th></th>
-																 <th></th>
-																 <th></th>
-																</tr>
-															<thead>`;
+								<tr>
+								 <th>Question</th>
+								 <th>Type</th>
+								 <th>Category</th>
+								 <th>Active</th>
+								 <th></th>
+								 <th></th>
+								 <th></th>
+								</tr>
+							<thead>`;
 
         $.get(url).then((res) => {
               console.log(res);
@@ -145,40 +142,40 @@
                 let jsonObj = JSON.stringify(res[i]);
                 let question =
                     `
-								<tr>
-									<td>
-										${res[i].question}
-									</td>
-									<td>
-										${res[i].type}
-									</td>
-									<td>
-										${res[i].category}
-									</td>
-									<td style="padding-left: 20px">
-											<div>
-											  <input type="checkbox" disabled id="activeQuestion${i}">
-											</div>
-									</td>
-									<td>
-										<input type="image" style="height: 20px"
-											   onclick="deleteQuestion(${res[i].id}, this.parentElement.parentElement.rowIndex)"
-					  						 src="https://img.icons8.com/material-sharp/24/000000/filled-trash.png"/>
-									</td>
-									<td style="padding-left: 20px">
-											<input type="image" style="height: 20px"
-														onclick="goToUpdate(${res[i].id})"
-													  src="https://img.icons8.com/ios-filled/50/000000/ball-point-pen.png">
-									</td>
-									<td style="padding-left: 20px">
-											<input type="image" src="https://img.icons8.com/ios-glyphs/30/000000/start.png"
-															data-toggle="modal"
-															class="modal-btn"
-															onclick="showModal(${jsonObj}, ${i})"
-															data-target="#exampleModal"/>
-									</td>
-							  	</tr>
-		                        `
+					<tr>
+						<td>
+							${res[i].question}
+						</td>
+						<td>
+							${res[i].type}
+						</td>
+						<td>
+							${res[i].category}
+						</td>
+						<td style="padding-left: 20px">
+								<div>
+								  <input type="checkbox" disabled id="activeQuestion${i}">
+								</div>
+						</td>
+						<td>
+							<input type="image" style="height: 20px"
+								   onclick="deleteQuestion(${res[i].id}, this.parentElement.parentElement.rowIndex)"
+								 src="https://img.icons8.com/material-sharp/24/000000/filled-trash.png"/>
+						</td>
+						<td style="padding-left: 20px">
+								<input type="image" style="height: 20px"
+											onclick="goToUpdate(${res[i].id})"
+										  src="https://img.icons8.com/ios-filled/50/000000/ball-point-pen.png">
+						</td>
+						<td style="padding-left: 20px">
+								<input type="image" src="https://img.icons8.com/ios-glyphs/30/000000/start.png"
+												data-toggle="modal"
+												class="modal-btn"
+												onclick='showModal(${jsonObj}, ${i})'
+												data-target="#exampleModal"/>
+						</td>
+					</tr>
+					`
                 table.insertAdjacentHTML("beforeend", question);
                 $('#activeQuestion' + i).prop('checked', res[i].active);
               }
