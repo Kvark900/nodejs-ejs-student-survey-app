@@ -83,7 +83,7 @@
 		</div>
 
 		<!-- Modal -->
-		<% include ../partials/startQuestionModal.ejs %>
+		<% include ../partials/teacher/answerModal.ejs %>
 
 		<script>
       let questionToActivate;
@@ -125,30 +125,34 @@
               for (let i = 0; i < res.length; i++) {
                 let jsonObj = JSON.stringify(res[i]);
                 let question =
-                    `
-											<tr>
-													<td>
-														 ${res[i].text}
-													</td>
-													<td>
-														 ${res[i].lecture}
-													</td>
-														<td>
-															 ${res[i].likes}
-														</td>
-									    </tr>
-		                        `
+				                    `<tr>
+																	<td>
+																		 ${res[i].text}
+																	</td>
+																	<td>
+																		 ${res[i].lecture}
+																	</td>
+																		<td>
+																			 ${res[i].likes}
+																		</td>
+																		<td>
+																			<input type="image"
+																			       src="https://img.icons8.com/windows/32/000000/stack-exchange-answer.png"
+																			       data-toggle="modal"
+																			       data-target="#answerModal"
+																			       onclick='showAnswerModal(${jsonObj}, ${i})'/>
+																		</td>
+															</tr>`
                 table.insertAdjacentHTML("beforeend", question);
               }
             }
         );
       }
 
-
-      function showModal(question, index) {
-        questionToActivate = question;
-        questionToActivate.index = index;
-        $("#questionText")[0].value = "" + question.question;
+      function showAnswerModal(question, index) {
+        questionToAnswer = question;
+        $("#questionTextPanel")[0].value = "" + question.text;
+        questionToAnswer.index = ++index;
       }
 
 		</script>

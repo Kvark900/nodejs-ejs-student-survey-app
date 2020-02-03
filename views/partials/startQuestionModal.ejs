@@ -107,7 +107,7 @@
       seconds = seconds < 10 ? "0" + seconds : seconds;
       timerHtml.innerHTML = `
       <div class="alert alert-info" role="alert">
-		    Question "${questionToActivate.text}" is active for <strong>${minutes}:${seconds}</strong>
+		    Question "${questionToActivate.question}" is active for <strong>${minutes}:${seconds}</strong>
 			</div>`;
 
       if (--timer < 0) {
@@ -116,9 +116,16 @@
         disableActivation(false);
         deactivateQuestion(questionToActivate.id);
         $('input:checked').prop("checked", false);
-        getChartResults(questionToActivate.options, [2,5,6]);
+        if (validOptions(questionToActivate.options))
+          getChartResults(questionToActivate.options);
+        else if (questionToActivate.type_id == 1)
+          getChartResults(["Yes", "No"]);
       }
     }, 1000);
+  }
+
+  function validOptions(options) {
+    return options !== undefined && options.length > 0 && options[0] !== null;
   }
 
   function load() {
@@ -130,13 +137,29 @@
 
 
 <script>
-  function getChartResults(options, data) {
+  function getChartResults(options) {
     let myChart = document.getElementById('chartResults').getContext('2d');
+    myChart.clearRect(0, 0, myChart.width, myChart.height);
+
+    let n = options.length;
+    let data = [];
+    for (let i = 0; i < n; i++)
+      data.push(Math.floor(Math.random() * Math.floor(20)))
 
     // Global Options
     Chart.defaults.global.defaultFontFamily = 'Lato';
     Chart.defaults.global.defaultFontSize = 18;
     Chart.defaults.global.defaultFontColor = '#777';
+
+    let colors = [
+      'rgba(255, 99, 132, 0.6)',
+      'rgba(54, 162, 235, 0.6)',
+      'rgba(255, 206, 86, 0.6)',
+      'rgba(75, 192, 192, 0.6)',
+      'rgba(153, 102, 255, 0.6)',
+      'rgba(255, 159, 64, 0.6)',
+      'rgba(255, 99, 132, 0.6)'
+    ]
 
     let massPopChart = new Chart(myChart, {
       type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
@@ -146,15 +169,7 @@
           label: 'Answers',
           data: data,
           //backgroundColor:'green',
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.6)',
-            'rgba(54, 162, 235, 0.6)',
-            'rgba(255, 206, 86, 0.6)',
-            'rgba(75, 192, 192, 0.6)',
-            'rgba(153, 102, 255, 0.6)',
-            'rgba(255, 159, 64, 0.6)',
-            'rgba(255, 99, 132, 0.6)'
-          ],
+          backgroundColor: colors.slice(0,n),
           borderWidth: 1,
           borderColor: '#777',
           hoverBorderWidth: 3,

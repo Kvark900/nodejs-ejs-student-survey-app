@@ -1,6 +1,7 @@
 const dbConfig = require("../config/dbConfig");
 const Answer = require("../model/Answer");
 const StudentQuestion = require("../model/StudentQuestion");
+const TeacherAnswer = require("../model/TeacherAnswer");
 
 async function getSubjects() {
   try {
@@ -370,6 +371,7 @@ async function getStudentsQuestionsByLectureId(lectureId) {
                JOIN survey_copy.subject s
                     ON l.subject_id = s.id
                WHERE sq.lecture_id = $1
+                 AND sq.id NOT IN (SELECT ta.student_question_id FROM survey_copy.teacher_answer ta)
                ORDER BY sq.likes DESC`;
   let questions = await dbConfig.pool.query(query, [lectureId]);
   console.info("Getting student's questions success");
@@ -395,11 +397,17 @@ async function postStudentQuestion(studentQuestion) {
 }
 
 async function likeQuestion(studentId) {
-  let query = `UPDATE survey_copy.student_question SET likes = likes + 1 WHERE id = $1;`
+  let query = `UPDATE survey_copy.student_question SET likes = likes + 1 WHERE id = $1;`;
   await dbConfig.pool.query(query, [studentId]);
   console.info("Liking student question success");
 }
 
+async function postTeacherAnswer(teacherAnswer) {
+  if (!teacherAnswer instanceof TeacherAnswer) throw Error("Not an teacher answer type");
+  let query = `INSERT INTO survey_copy.teacher_answer (student_question_id, text, time) 
+               VALUES ($1, $2, current_date)`;
+  await dbConfig.pool.query(query, [teacherAnswer.studentQuestionId, teacherAnswer.aText]);
+}
 
 module.exports = {
   getSubjects,
@@ -428,5 +436,6 @@ module.exports = {
   postStudentQuestion,
   likeQuestion,
   getAnswersByQuestionId,
-  getStudentsQuestionsByLectureId
+  getStudentsQuestionsByLectureId,
+  postTeacherAnswer
 };

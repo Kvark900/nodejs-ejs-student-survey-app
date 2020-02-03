@@ -10,7 +10,7 @@ const fs = require('fs');
 router.get('/', async (req, res, next) => {
     let subjects = await dao.getSubjects();
     let surveys = await dao.getSurveysWithSubjectNames();
-    res.render('teacher/teacher', {title: 'Express', subjects: subjects.rows, surveys: surveys.rows});
+    res.redirect("/teacher/question");
 });
 
 router.get('/lecture', async (req, res, next) => {

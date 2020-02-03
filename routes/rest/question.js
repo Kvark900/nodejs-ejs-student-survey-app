@@ -116,7 +116,6 @@ router.post("/deactivate/:id", async (req, res) => {
 });
 
 
-
 function deleteFile(filePath) {
     fs.unlink(filePath, err => {
         if (err) throw err;
