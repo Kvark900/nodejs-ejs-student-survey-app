@@ -98,9 +98,8 @@
             let date = res[i].date_time;
             let option =
                 `<option value=${res[i].id}>
-														${res[i].subject_name} ${date}
-													</option>
-		                    `;
+					${res[i].subject_name} ${date}
+				 </option> `;
             lectureBox.insertAdjacentHTML("beforeend", option);
           }
         });
@@ -112,13 +111,13 @@
         let table = $("#resultTable")[0];
         table.innerHTML = "";
         table.innerHTML = `  <thead class="thead-light">
-																<tr>
-																 <th>Question</th>
-																 <th>Lecture</th>
-																 <th>Likes</th>
-																 <th></th>
-																</tr>
-															<thead>`;
+								<tr>
+								 <th>Question</th>
+								 <th>Lecture</th>
+								 <th>Likes</th>
+								 <th></th>
+								</tr>
+							<thead>`;
 
         $.get(url).then((res) => {
               console.log(res);
@@ -126,23 +125,23 @@
                 let jsonObj = JSON.stringify(res[i]);
                 let question =
 				                    `<tr>
-																	<td>
-																		 ${res[i].text}
-																	</td>
-																	<td>
-																		 ${res[i].lecture}
-																	</td>
-																		<td>
-																			 ${res[i].likes}
-																		</td>
-																		<td>
-																			<input type="image"
-																			       src="https://img.icons8.com/windows/32/000000/stack-exchange-answer.png"
-																			       data-toggle="modal"
-																			       data-target="#answerModal"
-																			       onclick='showAnswerModal(${jsonObj}, ${i})'/>
-																		</td>
-															</tr>`
+										<td>
+											 ${res[i].text}
+										</td>
+										<td>
+											 ${res[i].lecture}
+										</td>
+											<td>
+												 ${res[i].likes}
+											</td>
+											<td>
+												<input type="image"
+													   src="https://img.icons8.com/windows/32/000000/stack-exchange-answer.png"
+													   data-toggle="modal"
+													   data-target="#answerModal"
+													   onclick='showAnswerModal(${jsonObj}, ${i})'/>
+											</td>
+									</tr>`
                 table.insertAdjacentHTML("beforeend", question);
               }
             }
