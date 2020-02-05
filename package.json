@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon --inspect server.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "@types/express": "^4.17.2",
