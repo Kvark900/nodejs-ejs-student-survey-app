@@ -17,4 +17,8 @@ router.get('/results/:qId', async (req, res, next) => {
   }
 });
 
+router.get("/", (req, res, next) => {
+  res.redirect("/teacher");
+});
+
 module.exports = router;

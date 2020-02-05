@@ -14,6 +14,7 @@ const lectureRouter = require('./routes/rest/lecture');
 const answerRouter = require('./routes/rest/answer');
 const studentsQuestionRouter = require('./routes/rest/studentQuestion');
 const teacherAnswerRouter = require('./routes/rest/teacherAnswer');
+const commonRouter = require('./routes/common');
 
 
 const moment = require("moment");
@@ -34,6 +35,7 @@ server.use(express.static(path.join(__dirname, 'public')));
 
 server.use('/teacher', teacherRouter);
 server.use('/student', studentRouter);
+server.use('/', commonRouter);
 
 server.use('/api', apiRouter);
 server.use('/api/question', questionRouter);
@@ -57,6 +59,12 @@ server.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+server.get("/", (require, res, nex) =>{
+  console.log("First route");
+  res.redirect("/teacher");
+});
+
 //
 server.listen(PORT, (req, res) => {
   console.log("Server started on port", PORT);
