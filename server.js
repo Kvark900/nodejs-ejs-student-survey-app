@@ -4,7 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-const PORT = process.env.port || 3000;
+const PORT = process.env.PORT || 3000;
 
 const teacherRouter = require('./routes/view/teacher');
 const studentRouter = require('./routes/view/student');
@@ -59,7 +59,7 @@ server.use(function (err, req, res, next) {
 });
 //
 server.listen(PORT, (req, res) => {
-  console.log("Server started on port 3000");
+  console.log("Server started on port", PORT);
 });
 
 module.exports = server;
