@@ -4,7 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-
+const PORT = process.env.port || 3000;
 
 const teacherRouter = require('./routes/view/teacher');
 const studentRouter = require('./routes/view/student');
@@ -29,7 +29,7 @@ server.use(express.json());
 server.use(express.urlencoded({extended: false}));
 server.use(cookieParser());
 server.use(bodyParser.json());
-server.use(bodyParser.urlencoded({ extended: true}));
+server.use(bodyParser.urlencoded({extended: true}));
 server.use(express.static(path.join(__dirname, 'public')));
 
 server.use('/teacher', teacherRouter);
@@ -44,22 +44,22 @@ server.use('/api/teacherAnswer', teacherAnswerRouter);
 
 // catch 404 and forward to error handler
 server.use(function (req, res, next) {
-    next(createError(404));
+  next(createError(404));
 });
 
 // error handler
 server.use(function (err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
 });
 //
-server.listen(3000, (req, res) => {
-    console.log("Server started on port 3000");
+server.listen(PORT, (req, res) => {
+  console.log("Server started on port 3000");
 });
 
 module.exports = server;
