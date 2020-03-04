@@ -3,6 +3,10 @@ const Answer = require("../model/Answer");
 const StudentQuestion = require("../model/StudentQuestion");
 const TeacherAnswer = require("../model/TeacherAnswer");
 
+
+//TODO: ****REMOVE HARDCODED QUERIES AND QUERIES NAMES
+
+
 async function getSubjects() {
   try {
     let queryResult = await dbConfig.pool.query("SELECT * from survey_copy.subject;");

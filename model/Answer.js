@@ -1,3 +1,6 @@
+//TODO: **** INTRODUCE MORE MODELS
+
+
 class Answer {
   constructor(questionId, employeeId, dateOfAnswer, answerText, studentId) {
     this.questionId = questionId;
