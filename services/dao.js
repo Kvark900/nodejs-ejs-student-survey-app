@@ -201,7 +201,7 @@ async function getLecturesBySubjectId(subjectId) {
                 JOIN survey_copy.subject s
                      ON l.subject_id = s.id
                 WHERE l.subject_id = $1;
-        `;
+              `;
     let result = await dbConfig.pool.query(query, [subjectId]);
     console.info(new Date() + ": Getting lectures by subject id success");
     return result;
