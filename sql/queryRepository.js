@@ -1,3 +1,5 @@
+const moment = require("moment");
+
 const GET_SUBJECTS = "GetSubjects";
 const GET_QUESTIONS = "GetQuestions";
 const CREATE_SURVEY = "CreateSurvey";
@@ -31,7 +33,7 @@ const POST_TEACHER_ANSWER = "PostTeacherAnswer";
 const fs = require('fs');
 
 function getQuery(name) {
-  console.log(`Reading SQL file: ${name}.sql`)
+  console.log(`${moment(new Date()).format("DD.MM.YYYY h:mm:ss a")} - Reading SQL file: ${name}.sql`)
   return fs.readFileSync(process.cwd() + "/sql/" + name + '.sql').toString();
 }
 
