@@ -36,7 +36,6 @@ router.get('/questions', async (req, res, next) => {
   } catch (e) {
     console.log(e.message)
   }
-
 });
 
 
